@@ -1,0 +1,102 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<div class="row">
+
+
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center">{{title}}</h1>
+                <p class="card-description text-center">{{subtitle}}</p>
+                <p class="card-description text-center">All Fields with Asterisk are required</p>
+
+                {% if messages %} {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags}}" {% endif %}>
+                    <p class="card-description">{{ message }}</p>
+                    <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %} {% endif %}
+                <form class="forms-sample" action="" method="POST">
+                    <div class="form-group">
+                        {% csrf_token %} {{form | crispy }}
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-light">Cancel</a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center">My Leaves</h1>
+                <p class="card-description text-center"></p>
+                <div class="table-responsive">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Start Date</th>
+                                <th>End-Date</th>
+                                <th>Leave Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leave in myleave %}
+                            <tr>
+                                <td>{{ leave.user.get_full_name}}</td>
+                                <td>{{ leave.startdate }}</td>
+                                <td>{{ leave.enddate }}</td>
+
+                                <td>{{ leave.leavetype }}</td>
+
+                                {% if leave.status == 'Pending' %}
+                                <td><label class="badge badge-warning">{{ leave.status }}</label></td>
+                                {% elif leave.status == 'Approved'%}
+                                <td><label class="badge badge-success">{{ leave.status }}</label></td>
+                                {% elif leave.status == 'Rejected'%}
+                                <td><label class="badge badge-danger">{{ leave.status }}</label></td>
+                                {% endif %}
+
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                <br><br>
+                <ul class="pagination" role="menubar" aria-label="Pagination">
+                    {% if myleave.has_previous %}
+                    <li style="background-color: #4B49AC;"><a href="?page=1"><span>First</span></a></li>
+                    <li><a href="?page={{myleave.previous_page_number}}"><span>Previous</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>First</span></a></li>
+                    <li><a href=""><span>Previous</span></a></li>
+                    {% endif %}
+                    <li class="current"><a href="">{{ myleave.number }}</a></li>
+                    {% if myleave.has_next %}
+                    <li><a href="?page={{ myleave.next_page_number }}"><span>Next</span></a></li>
+                    <li><a href="?page={{ myleave.paginator.num_pages }}"><span>Last</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>Next</span></a></li>
+                    <li><a href=""><span>Last</span></a></li>
+                    {% endif %}
+
+                </ul>
+                <div class="text-right">
+                    <p class="text-right">Page {{ myleave.number }} of {{ myleave.paginator.num_pages }}</p>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock changepassword %}

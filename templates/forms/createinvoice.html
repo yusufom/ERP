@@ -1,0 +1,226 @@
+{% extends "static.html" %}{% load static %}{% block css_form %}
+<style>
+    .formed {
+        display: block;
+        width: 100%;
+        padding-bottom: 10px;
+        height: 2.875rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1;
+        color: #495057;
+        background-color: #ffffff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 2px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+</style>
+{% endblock css_form %}{% block static %}
+<div class="container-scroller">
+    {% include "navbar.html" %}
+    <div class="container-fluid page-body-wrapper">
+        {% include "sidebarskin.html" %} {% include "rightsidebar.html" %} {% include "sidebar.html" %} {% load bulma_tags %}{% load crispy_forms_tags %}
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                {% if messages %} {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags}}" {% endif %}>
+                    {{ message }}
+                    <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %} {% endif %}
+                <div class="row">
+                    <div class="col-md-12 grid-margin">
+                        <h2 class="text-center baller">{{title}}</h2>
+                        <div class="hero-body">
+                            <form class="forms-sample" method="POST" action="">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{form.order_to|bulma}}
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        {{form.ship_to|bulma}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form.payment_terms|bulma}}
+                                    </div>
+                                    <br>
+                                    <div class="col-md-4">
+                                        {{form.freight|bulma}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form.delivery_date |bulma}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form.remarks|bulma}}
+                                    </div>
+                                    <div class="form-group col-md-2"> {{form.approval |as_crispy_field}}
+                                    </div>
+                                    <div class="form-group col-md-2"> {{form.Vatchoice |as_crispy_field}}
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="table-responsive">
+                                    <table class="table table-hover display expandable-table">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Project Name</th>
+                                                <th>Quantity</th>
+                                                <th>Unit Price </th>
+                                                <th>Amount(₦)</th>
+                                                <th>Add</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>{{ formset.management_form }}{% for form in formset %}
+                                            <tr class="form-rowe">
+                                                <td>{{form.item_description}}</td>
+                                                <td>{{form.project}}</td>
+                                                <td>{{form.quantity}}</td>
+                                                <td>{{form.rate}}</td>
+                                                <td class="amount">{{form.amount}}</td>
+                                                <td>
+                                                    <div class="input-group-append">
+                                                        <button class="badge badge-success add-form-row">+</button>&nbsp;
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group-append">
+                                                        <button class="badge badge-warning remove-form-row">-</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+
+                                    </table>
+                                </div>
+
+                                <br>
+                                <div class="columns">
+                                    <div class="column">
+                                        <h3 class="title is-4">Sub Total(₦): <span id="total"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="row spacer">
+                                    <div class="col-4 offset-2">
+                                        <button type="submit" class="button btn btn-primary btn-block is-info is-half">Create</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% if formset.errors %} {% for field in formset %} {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %} {% endfor %} {% for error in formset.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %} {% endif %}
+            </div>
+            {% include "footer.html" %}
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->{% endblock static %} {% block script_form %}
+<script type="text/javascript">
+    $('table input').on("input", function() {
+        var total = []
+        var $tr = $(this).closest('tr');
+        var textValue1 = $("input.rate", $tr).val();
+        var textValue2 = $('input.quantity', $tr).val();
+        amt = textValue1 * textValue2;
+        // console.log(amt);
+        $('.amount', $tr).html(amt);
+        calc_total();
+    });
+
+    function calc_total() {
+        var sum = 0;
+        $(".amount").each(function() {
+            sum += parseFloat($(this).text());
+        });
+        console.log(sum);
+        $('#total').text(sum);
+    }
+</script>
+
+
+<script type="text/javascript">
+    function updateElementIndex(el, prefix, ndx) {
+        var id_regex = new RegExp('(' + prefix + '-\\d+)');
+        var replacement = prefix + '-' + ndx;
+        if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+        if (el.id) el.id = el.id.replace(id_regex, replacement);
+        if (el.name) el.name = el.name.replace(id_regex, replacement);
+    }
+
+    function cloneMore(selector, prefix) {
+        var newElement = $(selector).clone(true);
+        console.log(newElement);
+        var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+        newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+            var name = $(this).attr('name')
+            if (name) {
+                name = name.replace('-' + (total - 1) + '-', '-' + total + '-');
+                var id = 'id_' + name;
+                $(this).attr({
+                    'name': name,
+                    'id': id
+                }).val('').removeAttr('checked');
+            }
+        });
+        newElement.find('label').each(function() {
+            var forValue = $(this).attr('for');
+            if (forValue) {
+                forValue = forValue.replace('-' + (total - 1) + '-', '-' + total + '-');
+                $(this).attr({
+                    'for': forValue
+                });
+            }
+        });
+        total++;
+        $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+        $(selector).after(newElement);
+        return false;
+    }
+
+    function deleteForm(prefix, btn) {
+        var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+        if (total > 1) {
+            btn.closest('.form-rowe').remove();
+            var forms = $('.form-rowe');
+            $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+            for (var i = 0, formCount = forms.length; i < formCount; i++) {
+                $(forms.get(i)).find(':input').each(function() {
+                    updateElementIndex(this, prefix, i);
+                });
+            }
+        }
+        return false;
+    }
+    $(document).on('click', '.add-form-row', function(e) {
+        e.preventDefault();
+        cloneMore('table tr:last', 'form');
+        return false;
+    });
+    $(document).on('click', '.remove-form-row', function(e) {
+        e.preventDefault();
+        deleteForm('form', $(this));
+        return false;
+    });
+    // $('table').on('click', '.remove-form-row', function(e) {
+    //     e.preventDefault();
+    //     $(this).closest('tr').remove()
+    // });
+</script>{% endblock script_form %}

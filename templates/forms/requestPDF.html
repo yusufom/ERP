@@ -1,0 +1,245 @@
+<!Doctype html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <title>Purchase Order</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+
+
+</head>
+<style>
+    @media print {
+        h1 {
+            font-size: 30pt;
+            padding-bottom: -50px;
+            color: rgb(16, 14, 128);
+        }
+        section {
+            -pdf-frame-border: 1;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-right {
+            text-align: right !important;
+        }
+    }
+</style>
+<style>
+    @page {
+        size: a4 portrait;
+        @frame header_frame {
+            /* Static Frame */
+            left: 30pt;
+            width: 500pt;
+            top: 30pt;
+            height: 80pt;
+        }
+        @frame content_frame {
+            /* Content Frame */
+            left: 20pt;
+            width: 530pt;
+            top: 100pt;
+            height: 632pt;
+        }
+        @frame footer_frame {
+            /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: 50pt;
+            width: 512pt;
+            top: 772pt;
+            height: 20pt;
+        }
+    }
+</style>
+
+<body>
+
+    <div id="header_content">
+        <table>
+            <tr>
+                <td style="width: 80%;">
+                    <h2 style="color:#9e1d1d; font-size: 17px;"><u>Cash/Cheque Requistion Form</u></h2>
+                </td>
+                <td>
+                    <p style="color:#9e1d1d; font-size: 13px;"><b>CCTR Number</b></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 80%;">
+                </td>
+                <td style="border: 2px solid rgb(16, 14, 128);font-size: 30px; text-align: center; padding-top: 5px; padding-left: 5px; height: 35px;">
+                    <p>NO: {{rfs.cctr}}</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <div id="footer_content">
+        <p class="text-right">Page
+            <pdf:pagenumber>
+                of
+                <pdf:pagecount>
+        </p>
+    </div>
+
+    <div>
+        <h1 class="text-center">COZYM LIMITED</h1>
+    </div>
+
+
+    <div style="font-size: 14px;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 35%; border: 1px solid  rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white;">Requisition Date and Time
+                    </th>
+                    <th style="width: 10%;border: 1px solid  white; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white;">
+                        Currency
+                    </th>
+                    <th style="border: 1px solid white; border-right-color: rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white;">Requesting Name & Signature
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px;">{{rfs.created}}
+                    </td>
+                    <td style="border: 1px solid rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px;">{{rfs.currency}}
+                    </td>
+                    <td style="border: 1px solid rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px;"> {{u.get_full_name}} <img style="width: 100px; height: 30px;" src="{{u.signature.path}}" alt="image">
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div style="font-size: 13px;">
+        <table>
+            <thead>
+                <tr>
+                    <td style="width: 5%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white;" scope="col"><b>No.</b></td>
+                    <th style="width: 47%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white;" scope="col">Item Description</th>
+                    <th style="width: 10%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white;" scope="col">Project</th>
+                    <th style="width: 10%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white;" scope="col">Quantity</th>
+                    <th style="width: 13%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white;" scope="col">Unit Price</th>
+                    <th style="width: 15%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white;" scope="col">Extended Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in rfsd %}
+                <tr>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width:30px">{{forloop.counter}}</td>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width:400px">{{r.item_description}}</td>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{r.project}}</td>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{r.quantity}}</td>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{r.rate}}</td>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{r.amount}}s</td>
+                </tr>
+                {% endfor %}
+                <tr style="border: none;">
+                    <td style="border: none;"></td>
+                    <td style="border: none; font-size: 16px;">Other Comment: {{rfs.comment}}</td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center ;background-color: rgb(16, 14, 128); color: white; padding-top: 5px;">Subtotal</th>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{subtotald}}</td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center;background-color: rgb(16, 14, 128); color: white; padding-top: 5px;">VAT 7.5%</th>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{vatd}}</td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center;background-color: rgb(16, 14, 128); color: white; padding-top: 5px;">Total</th>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{totald}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <br>
+    <div style="font-size: 14px; color: rgb(16, 14, 128);  padding: 5px 0px 0px 5px; ; border-collapse: collapse;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 45%; height: 30px; text-align: left; border: 1px solid  rgb(16, 14, 128)">Prepared by: {{u.get_full_name}}
+                    </th>
+                    <th> </th>
+                    <th style="width: 45%; height: 30px; text-align: left; border: 1px solid  rgb(16, 14, 128)">Payment Mode: {{rfs.pmode}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% if rfs.status == 'Approved'%}
+                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">H.O.D Sign/Date: <img style="width: 100px; height: 30px;" src="{{a.signature.path}}" alt="image">--- {{rfs.mdate}}
+                    </th>
+                    {% else %}
+                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">H.O.D Sign/Date:
+                    </th>
+                    {% endif %}
+                    <th>
+                    </th>
+                    <th style="text-align: left; border: 1px solid  rgb(16, 14, 128)"> Beneficiary: {{rfs.beneficiary}}
+                    </th>
+                </tr>
+                <tr>
+                    {% if rfs.fstatus == 'Approved' %}
+                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">Finance Approval Sign/Date: <img style="width: 100px; height: 30px;" src="{{f.signature.url}}" alt="image"> --- {{rfs.fdate}}
+                    </th>
+                    {% else %}
+                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">Finance Approval Sign/Date:
+                    </th>
+                    {% endif %}
+                    <th>
+                    </th>
+                    <th style="text-align: left; border: 1px solid  rgb(16, 14, 128)"> Beneficiary Acct info: {{rfs.bacctinfo}}
+                    </th>
+                </tr>
+                <tr>
+                    <th style="text-align: left; border: 1px solid  rgb(16, 14, 128)">Receiver Sign/Date:
+                    </th>
+                    <th>
+                    </th>
+                    <th style="text-align: left; border: 1px solid  rgb(16, 14, 128)"> Others: {{rfs.others}}
+                    </th>
+                </tr>
+                <tr>
+                    <th style="text-align: left; border: 1px solid  rgb(16, 14, 128)">Refund Details: {{rfs.rdetails}}
+                    </th>
+                    <th>
+                    </th>
+                    <th style="font-size: 8px; text-align: left;">{Any requisition Fund not receiptable for may be deducted from wages if deemed receiptable}
+                    </th>
+                </tr>
+            </tbody>
+
+
+        </table>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
+</html>

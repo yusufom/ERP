@@ -1,0 +1,1626 @@
+{% extends "static.html" %}{% load static %}{% load humanize %} {% block static %}
+<style>
+    .rounded-circle-image {
+        border-radius: 50% !important;
+        width: 250px;
+        height: 250px;
+    }
+    
+    .profile-wrapper {
+        background: #fff;
+        -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        padding-top: 10px;
+    }
+    
+    .list-group {
+        margin-top: 10px;
+    }
+    
+    .list-group-item {
+        position: relative;
+        display: block;
+        padding: 10px 15px;
+        margin-bottom: -1px;
+        background-color: #fff;
+        border: 1px solid transparent;
+        font-size: 30px;
+    }
+    
+    #override-start {
+        background: none !important;
+        top: 35% !important;
+        right: 13px;
+        color: #000;
+        font-size: 24px;
+    }
+    
+    .alert-warning {
+        background: #fd7b7b;
+    }
+    
+    .alert-success {
+        background-color: #82b72a;
+    }
+    
+    .alert-success,
+    .alert-warning {
+        font-size: 16px;
+    }
+    
+    .employee-name-title {
+        color: #3873b1;
+        font-weight: 600;
+        font-variant: petite-caps;
+        font-size: 3.1rem !important;
+    }
+    
+    .panel-default>.panel-heading {
+        color: #fff !important;
+    }
+    
+    .panel-title a:hover {
+        color: #e6e4e4;
+    }
+    
+    .panel-title a:active {
+        color: #e6e4e4;
+    }
+    
+    .panel-title a:focus {
+        color: #e6e4e4;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .baller {
+            font-size: 25px;
+        }
+    }
+</style>
+<div class="container-scroller">
+    {% include "navbar.html" %}
+    <div class="container-fluid page-body-wrapper">
+        {% include "sidebarskin.html" %} {% include "rightsidebar.html" %} {% include "sidebar.html" %}
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <section class="content">
+                    <section class="container-fluid">
+                        <section class="row">
+                            <section class="col col-lg-12">
+                                <span><a class="btn btn-secondary" href="{% url 'process:ProceesHome' %}" style="color:#565656;">Back</a></span>
+                            </section>
+                        </section>
+                        <section class="row">
+                            <section class="col col-lg-12 col-md-12  col-sm-12">
+                                {% if messages %} {% for message in messages %}
+                                <div {% if message.tags %} class="{{ message.tags}}" {% endif %}>
+                                    {{ message }}
+                                    <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+</button>
+                                </div>
+                                {% endfor %} {% endif %}
+
+                            </section>
+                        </section>
+                        <section class="">
+                            <section class="text-center">
+                                <h1 class="font-weight-bold baller">{{ele.name}}</h1>
+                            </section>
+                        </section>
+                        <section class="row">
+                            <section class="col col-lg-3 col-md-3 col-sm-12 profile-wrapper">
+                                <div class="text-center">
+                                    {% if ele.element.img %}
+                                    <img style="object-fit: contain;" , src="{{ele.element.img.url}}" class="img-fluid rounded-circle-image"> {% else %}
+                                    <img src="DEFAULT_IMAGE" class="img-fluid rounded-circle-image" /> {% endif %}
+                                </div>
+                                <section class="text-centered" style="margin-top: 3px;">
+
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <h5>Compound/Element Name: <br>
+                                                <p class="text-center" style="font-size: 30px; margin-top: 10px;">{{ ele.name}}</p>
+                                            </h5>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h5>Compound Type: <br>
+                                                <p class="text-center" style="font-size: 30px;margin-top: 10px;">{{ ele.compound.name }}</p>
+                                            </h5>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h5>CAS Number: <br>
+                                                <p class="text-center" style="font-size: 30px;margin-top: 10px;">{{ ele.CASno }}</p>
+                                            </h5>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h5>Molecular Weight: <br>
+                                                <p class="text-center" style="font-size: 30px;margin-top: 10px;">{{ ele.molwt }}</p>
+                                            </h5>
+                                        </li>
+
+
+                                    </ul>
+                                </section>
+                            </section>
+                            <section class="col col-lg-9">
+                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                    <br>
+                                    <!-- PHYSICAL PROPERTIES -->
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab" id="headingOne">
+                                            <h4 class="panel-title">
+                                                <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+PHYSICAL PROPERTIES </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                            <div class="panel-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col col-lg-6">
+                                                            <div class="list-group" id="list-tab" role="tablist">
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Formula: {{ ele.formula |safe}}</p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Formula Weight:
+                                                                        <p>{{ ele.formular_weight }}</p>
+                                                                    </p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Color:
+                                                                        <p> {{ ele.color }}</p>
+                                                                    </p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Crystalline Form:
+                                                                        <p>{{ ele.crystalline_form }}</p>
+                                                                    </p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Refractive Index:
+                                                                        <p> {{ ele.refractive_index }}</p>
+                                                                    </p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Specific Gravity: {{ ele.specific_gravity |safe}}</p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Melting Point (°C): {{ ele.melting_point |safe}}</p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Boiling Point (°C): {{ ele.boiling_point |safe}}</p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Solubility in 100 parts (Cold Water): {{ ele.solubility_cold |safe}}</p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Solubility in 100 parts (Hot Water): {{ ele.solubility_hot |safe}}</p>
+                                                                </a>
+                                                                <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls="">
+                                                                    <p style="font-weight: Bold">Solubility in 100 parts (Other reagents): {{ ele.solubility_other |safe}}</p>
+                                                                </a>
+
+
+                                                            </div>
+
+
+                                                        </div>
+                                                        <!-- Here working -->
+                                                        <div class="col col-lg-6">
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /PERSONAL INFORMATION -->
+                                        {% if vpiol %}
+
+
+                                        <!-- VAPOUR PRESSURE -->
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingTwo">
+                                                <h4 class="panel-title">
+                                                    <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+VAPOUR PRESSURE
+</a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                                <div class="panel-body">
+                                                    <section class="container-fluid">
+
+                                                        <div class="row">
+                                                            <!-- <div class="col col-lg-12">
+                                                               <div class="list-group" id="list-tab" role="tablist">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-hover display expandable-table">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>C1</th>
+                                                                                    <th>C2</th>
+                                                                                    <th>C3</th>
+                                                                                    <th>C4</th>
+                                                                                    <th>C5</th>
+                                                                                    <th>T<sub>min</sub>, K</th>
+                                                                                    <th>P at T<sub>min</sub></th>
+                                                                                    <th>T<sub>max</sub>, K</th>
+                                                                                    <th>P at T<sub>max</sub></th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tr>
+                                                                                <td>{{vpiol.C1}}</td>
+                                                                                <td>{{vpiol.C2}}</td>
+                                                                                <td>{{vpiol.C3}}</td>
+                                                                                <td>{{vpiol.C4}}</td>
+                                                                                <td>{{vpiol.C5}}</td>
+                                                                                <td>{{vpiol.Tmin}}</td>
+                                                                                <td>{{vpiol.PTmin}}</td>
+                                                                                <td>{{vpiol.Tmax}}</td>
+                                                                                <td>{{vpiol.PTmax}}</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div> -->
+                                                            <div class="col col-lg-12">
+                                                                        <table class="table tablevpiol">
+                                                                            <thead>
+                                                                                
+                                                                                <tr>
+                                                                                    <th class="text-center">Enter Temperature</th>                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="title is-4 text-center">Temperature limit: {{vpiol.Tmin}} ≤ T (K) ≤ {{vpiol.Tmax}}</td>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td><input class="vpioltemp form-control" type="text"></td>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+
+                                                                        </table>
+
+                                                                        <div class="columns">
+                                                                            <div class="column">
+                                                                                <h3 class="title is-4 text-center">Vapour Pressure = <span class="vapor"></span> Pa</h3>
+                                                                                <p class="title is-4 text-center"><span class="vapored"></span></p>
+                                                                            </div>
+                                                                        </div>
+
+                                                        </div>
+
+                                                    </section>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /VAPOUR PRESSURE -->
+                                        {% endif %}  {% if diol %}
+
+
+                                                <!-- DENSITY -->
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingFour">
+                                                        <h4 class="panel-title">
+                                                            <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">DENSITY (mol/dm<sup>3</sup>)</a>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                                                        <div class="panel-body">
+                                                            <section class="container-fluid">
+
+                                                                <div class="row">
+                                                                    <!-- <div class="col col-lg-12">
+                                                                    <div class="list-group" id="list-tab" role="tablist">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-hover display expandable-table">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>C1</th>
+                                                                                    <th>C2</th>
+                                                                                    <th>C3</th>
+                                                                                    <th>C4</th>
+                                                                                    <th>T<sub>min</sub>, K</th>
+                                                                                    <th>Density at T<sub>min</sub></th>
+                                                                                    <th>T<sub>max</sub>, K</th>
+                                                                                    <th>Density at T<sub>max</sub></th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tr>
+                                                                                <td>{{diol.C1}}</td>
+                                                                                <td>{{diol.C2}}</td>
+                                                                                <td>{{diol.C3}}</td>
+                                                                                <td>{{diol.C4}}</td>
+                                                                                <td>{{diol.Tmin}}</td>
+                                                                                <td>{{diol.DTmin}}</td>
+                                                                                <td>{{diol.Tmax}}</td>
+                                                                                <td>{{diol.DTmax}}</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div> -->
+                                                                        
+                                                                    <div class="col col-lg-12">
+                                                                        <table class="table tablediol">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="text-center">Enter temperature</th>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="title is-4 text-center">Temperature limit: {{diol.Tmin}} ≤ T (K) ≤ {{diol.Tmax}}</td>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td><input class="dioltemp form-control" type="text"></td>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+
+                                                                        </table>
+
+                                                                        <div class="columns">
+                                                                            <div class="column">
+                                                                                <h3 class="text-center title is-4">Density = <span class="amount"></span> mol/dm<sup>3</sup></h3>
+                                                                                <p class="text-center title is-4"><span class="amounted"></span></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </section>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /DENSITY -->
+                                                {% endif %} {% if ccioc %}
+
+
+                                                <!-- Critical Constants and Acentric Factors -->
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingFive">
+                                                        <h4 class="panel-title">
+                                                            <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+CRITICAL CONSTANTS AND ACENTRIC FACTORS</a>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                                                        <div class="panel-body">
+                                                            <section class="container-fluid">
+
+                                                                <div class="row">
+                                                                    <div class="col col-lg-12">
+
+
+                                                                        <div class="list-group" id="list-tab" role="tablist">
+                                                                            <div class="table-responsive">
+                                                                                <table class="table table-hover display expandable-table">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>T<sub>c</sub> , K</th>
+                                                                                            <th>P<sub>c</sub> , MPa</th>
+                                                                                            <th>V<sub>c</sub> , m<sup>3</sup>/kmol</th>
+                                                                                            <th>Z<sub>c</sub></th>
+                                                                                            <th>Accentric Factor</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tr>
+
+                                                                                        <td>{{ccioc.Tc}}</td>
+                                                                                        <td>{{ccioc.Pc}}</td>
+                                                                                        <td>{{ccioc.Vc}}</td>
+                                                                                        <td>{{ccioc.Zc}}</td>
+                                                                                        <td>{{ccioc.AccentricFactor}}</td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                            </section>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /CRITICAL CONSTANT -->
+                                                    {% endif %} {% if hviol %}
+
+
+                                                    <!-- HEAT OF VAPORIZATION OF INORGANIC AND ORGANIC LIQUIDS -->
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading" role="tab" id="heading6">
+                                                            <h4 class="panel-title">
+                                                                <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse6" aria-expanded="true" aria-controls="collapseFive">
+HEAT OF VAPORIZATION OF INORGANIC AND ORGANIC LIQUIDS (J/kmol)</a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapse6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading6">
+                                                            <div class="panel-body">
+                                                                <section class="container-fluid">
+
+                                                                    <div class="row">
+                                                                        <!-- <div class="col col-lg-12">
+
+
+                                                                            <div class="list-group" id="list-tab" role="tablist">
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table table-hover display expandable-table">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>C1 × 1E-07</th>
+                                                                                                <th>C2</th>
+                                                                                                <th>C3</th>
+                                                                                                <th>C4</th>
+                                                                                                <th>T<sub>min</sub>, K</th>
+                                                                                                <th>ΔH<sub>v</sub> at T<sub>min</sub> × 1E-07</th>
+                                                                                                <th>T<sub>max</sub>, K</th>
+                                                                                                <th>ΔH<sub>v</sub> at T<sub>max</sub></th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tr>
+
+                                                                                            <td>{{hviol.C1x07}}</td>
+                                                                                            <td>{{hviol.C2}}</td>
+                                                                                            <td>{{hviol.C3}}</td>
+                                                                                            <td>{{hviol.C4}}</td>
+                                                                                            <td>{{hviol.Tmin}}</td>
+                                                                                            <td>{{hviol.HvTmin}}</td>
+                                                                                            <td>{{hviol.Tmax}}</td>
+                                                                                            <td>{{hviol.HvTmax}}</td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div> -->
+                                                                        <div class="col col-lg-12">
+                                                                        <table class="table tablehviol">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="text-center">Enter temperature</th>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="title is-4 text-center">Temperature limit: {{hviol.Tmin}} ≤ T (K) ≤ {{hviol.Tmax}}</td>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td><input class="hvioltemp form-control" type="text"></td>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+
+                                                                        </table>
+
+                                                                        <div class="columns">
+                                                                            <div class="column">
+                                                                                <h3 class="text-center title is-4">ΔH<sub>v</sub> = <span class="heatofvap"></span> J/Kmol</h3>
+                                                                                <p class="text-center title is-4"><span class="heatofvapor"></span></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </section>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /HEAT OF VAPORIZATION OF INORGANIC AND ORGANIC LIQUIDS -->
+                                                        {% endif %} {% if hciol %}
+
+
+                                                        <!-- HEAT OF CAPACITIES OF INORGANIC AND ORGANIC LIQUIDS -->
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading" role="tab" id="heading7">
+                                                                <h4 class="panel-title">
+                                                                    <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse7" aria-expanded="true" aria-controls="collapseFive">
+HEAT CAPACITIES OF INORGANIC AND ORGANIC LIQUIDS (J/kmol.K)</a>
+                                                                </h4>
+                                                            </div>
+                                                            <div id="collapse7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading6">
+                                                                <div class="panel-body">
+                                                                    <section class="container-fluid">
+
+                                                                        <div class="row">
+                                                                            <!-- <div class="col col-lg-12">
+
+
+                                                                                <div class="list-group" id="list-tab" role="tablist">
+                                                                                    <div class="table-responsive">
+                                                                                        <table class="table table-hover display expandable-table">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th>C1</th>
+                                                                                                    <th>C2</th>
+                                                                                                    <th>C3</th>
+                                                                                                    <th>C4</th>
+                                                                                                    <th>C5</th>
+                                                                                                    <th>T<sub>min</sub>, K</th>
+                                                                                                    <th>C<sub>p</sub> at T<sub>min</sub> × 1E-05</th>
+                                                                                                    <th>T<sub>max</sub>, K</th>
+                                                                                                    <th>C<sub>p</sub> at T<sub>max</sub> × 1E-05 </th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tr>
+
+                                                                                                <td>{{hciol.C1}}</td>
+                                                                                                <td>{{hciol.C2}}</td>
+                                                                                                <td>{{hciol.C3}}</td>
+                                                                                                <td>{{hciol.C4}}</td>
+                                                                                                <td>{{hciol.C5}}</td>
+                                                                                                <td>{{hciol.Tmin}}</td>
+                                                                                                <td>{{hciol.CpTminE05}}</td>
+                                                                                                <td>{{hciol.Tmax}}</td>
+                                                                                                <td>{{hciol.CpTmaxE05}}</td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div> -->
+                                                                            
+                                                                            {% if hciol.eqn == '1' %}
+                                                                            <div class="col col-lg-12">
+                                                                                <table class="table tablehciol1">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th class="text-center">Enter Temperature</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td class="title is-4 text-center">Temperature limit: {{hciol.Tmin}} ≤ T (K) ≤ {{hciol.Tmax}}</td>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td><input class="1hcioltemp form-control" type="text"></td>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+
+                                                                                </table>
+
+                                                                                <div class="columns">
+                                                                                    <div class="column">
+                                                                                        <p class="title is-4 text-center"><i>Using equation 1</i></p>
+                                                                                        <h3 class="title is-4 text-center">Cp = <span class="heatcapiol1"></span> J/kmol.K</h3>
+                                                                                        <p class="title is-4 text-center"><span class="heatcap1"></span></p>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            {% elif hciol.eqn == '2' %}
+                                                                            <div class="col col-lg-12">
+                                                                                <table class="table tablehciol">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th class="text-center">Enter Temperature</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td class="title is-4 text-center">Temperature limit: {{hciol.Tmin}} ≤ T (K) ≤ {{hciol.Tmax}}</td>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td><input class="hcioltemp form-control" type="text"></td>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+
+                                                                                </table>
+
+                                                                                <div class="columns">
+                                                                                    <div class="column">
+                                                                                        <p class="title is-4 text-center"><i>Using equation 2</i></p>
+                                                                                        <h3 class="title is-4 text-center">Cp = <span class="heatcapiol"></span> J/kmol.K</h3>
+                                                                                        <p class="title is-4 text-center"><span class="heatcap"></span></p>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            {% endif %}
+                                                                        
+                                                                    </section>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /VAPOUR PRESSURE -->
+                                                            {% endif %} {% if hccpiolp %}
+
+
+                                                            <!-- HEAT CAPACITY AT CONSTANT PRESSURE OF INORGANIC AND ORGANIC COMPOUNDS IN THE IDEAL GAS STATE FIT TO A POLYNOMIAL C -->
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading" role="tab" id="heading8">
+                                                                    <h4 class="panel-title">
+                                                                        <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse8" aria-expanded="true" aria-controls="collapse8">
+HEAT CAPACITY AT CONSTANT PRESSURE OF INORGANIC AND ORGANIC COMPOUNDS IN THE IDEAL GAS STATE FIT TO A POLYNOMIAL C<sub>p</sub> [J/(kmol.K)]</a>
+                                                                    </h4>
+                                                                </div>
+                                                                <div id="collapse8" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading8">
+                                                                    <div class="panel-body">
+                                                                        <section class="container-fluid">
+
+                                                                            <div class="row">
+                                                                                <!-- <div class="col col-lg-12">
+
+
+                                                                                    <div class="list-group" id="list-tab" role="tablist">
+                                                                                        <div class="table-responsive">
+                                                                                            <table class="table table-hover display expandable-table">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th>C1</th>
+                                                                                                        <th>C2</th>
+                                                                                                        <th>C3</th>
+                                                                                                        <th>C4 × 1E-05</th>
+                                                                                                        <th>C5 × 1E-10 </th>
+                                                                                                        <th>T<sub>min</sub>, K</th>
+                                                                                                        <th>C<sub>p</sub> at T<sub>min</sub> × 1E-05</th>
+                                                                                                        <th>T<sub>max</sub>, K</th>
+                                                                                                        <th>C<sub>p</sub> at T<sub>max</sub> × 1E-05 </th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tr>
+
+                                                                                                    <td>{{hccpiolp.C1}}</td>
+                                                                                                    <td>{{hccpiolp.C2}}</td>
+                                                                                                    <td>{{hccpiolp.C3}}</td>
+                                                                                                    <td>{{hccpiolp.C4E05}}</td>
+                                                                                                    <td>{{hccpiolp.C5E10}}</td>
+                                                                                                    <td>{{hccpiolp.Tmin}}</td>
+                                                                                                    <td>{{hccpiolp.CpTminE05}}</td>
+                                                                                                    <td>{{hccpiolp.Tmax}}</td>
+                                                                                                    <td>{{hccpiolp.CpTmaxE05}}</td>
+                                                                                                </tr>
+                                                                                            </table>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div> -->
+                                                                                <div class="col col-lg-12">
+                                                                                    <table class="table tablehccpiolp">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th class="text-center">Enter Temperature</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="title is-4 text-center">Temperature limit: {{hccpiolp.Tmin}} ≤ T (K) ≤ {{hccpiolp.Tmax}}</td>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td><input class="hccpiolptemp form-control" type="text"></td>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+
+                                                                                    </table>
+
+                                                                                    <div class="columns">
+                                                                                        <div class="column">
+                                                                                            <h3 class="title is-4 text-center">Cp = <span class="poly"></span> J/kmol.K</h3>
+                                                                                            <p class="title is-4 text-center"><span class="polynomial"></span></p>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                </div>
+
+                                                                        </section>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /HEAT CAPACITY AT CONSTANT PRESSURE OF INORGANIC AND ORGANIC COMPOUNDS IN THE IDEAL GAS STATE FIT TO A POLYNOMIAL C -->
+                                                                {% endif %} {% if hccpiolh %}
+
+
+                                                                <!-- HEAT CAPACITY AT CONSTANT PRESSURE OF INORGANIC AND ORGANIC COMPOUNDS IN THE IDEAL GAS STATE FIT TO A HYPERBOLIC FUNCTIONS C -->
+                                                                <div class="panel panel-default">
+                                                                    <div class="panel-heading" role="tab" id="heading9">
+                                                                        <h4 class="panel-title">
+                                                                            <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse9" aria-expanded="true" aria-controls="collapse9">
+HEAT CAPACITY AT CONSTANT PRESSURE OF INORGANIC AND ORGANIC COMPOUNDS IN THE IDEAL GAS STATE FIT TO A HYPERBOLIC FUNCTIONS C<sub>p</sub> [J/(kmol.K)]</a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div id="collapse9" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading9">
+                                                                        <div class="panel-body">
+                                                                            <section class="container-fluid">
+
+                                                                                <div class="row">
+                                                                                    <!-- <div class="col col-lg-12">
+
+
+                                                                                        <div class="list-group" id="list-tab" role="tablist">
+                                                                                            <div class="table-responsive">
+                                                                                                <table class="table table-hover display expandable-table">
+                                                                                                    <thead>
+                                                                                                        <tr>
+                                                                                                            <th>C1 × 1E-05</th>
+                                                                                                            <th>C2 × 1E-05</th>
+                                                                                                            <th>C3 × 1E-03</th>
+                                                                                                            <th>C4 × 1E-05</th>
+                                                                                                            <th>C5</th>
+                                                                                                            <th>T<sub>min</sub>, K</th>
+                                                                                                            <th>C<sub>p</sub> at T<sub>min</sub> × 1E-05</th>
+                                                                                                            <th>T<sub>max</sub>, K</th>
+                                                                                                            <th>C<sub>p</sub> at T<sub>max</sub> × 1E-05 </th>
+                                                                                                        </tr>
+                                                                                                    </thead>
+                                                                                                    <tr>
+
+                                                                                                        <td>{{hccpiolh.C1}}</td>
+                                                                                                        <td>{{hccpiolh.C2}}</td>
+                                                                                                        <td>{{hccpiolh.C3E03}}</td>
+                                                                                                        <td>{{hccpiolh.C4E05}}</td>
+                                                                                                        <td>{{hccpiolh.C5}}</td>
+                                                                                                        <td>{{hccpiolh.Tmin}}</td>
+                                                                                                        <td>{{hccpiolh.CpTminE05}}</td>
+                                                                                                        <td>{{hccpiolh.Tmax}}</td>
+                                                                                                        <td>{{hccpiolh.CpTmaxE05}}</td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                    </div> -->
+                                                                                    <div class="col col-lg-12">
+                                                                                        <table class="table tablehccpiolh">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th class="text-center">Enter Temperature</th>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="title is-4 text-center">Temperature limit: {{hccpiolh.Tmin}} ≤ T (K) ≤ {{hccpiolh.Tmax}}</td>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td><input class="hccpiolhtemp form-control" type="text"></td>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+
+                                                                                        </table>
+
+                                                                                        <div class="columns">
+                                                                                            <div class="column">
+                                                                                                <h3 class="title is-4 text-center">Cp = <span class="hyperbol"></span> J/kmol.K</h3>
+                                                                                                <p class="title is-4 text-center"><span class="hyperbolic"></span></p>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+
+                                                                            </section>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- /HEAT CAPACITY AT CONSTANT PRESSURE OF INORGANIC AND ORGANIC COMPOUNDS IN THE IDEAL GAS STATE FIT TO A POLYNOMIAL C -->
+                                                                    {% endif %} {% if eandg %}
+
+
+                                                                    <!-- ENTHALPIES AND GIBBS ENERGIES OF FORMATION, ENTROPIES, AND NET ENTHALPIES OF COMBUSTION OF INORGANIC AND ORGANIC COMPOUNDS AT 298.15 -->
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading" role="tab" id="heading10">
+                                                                            <h4 class="panel-title">
+                                                                                <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse10" aria-expanded="true" aria-controls="collapse10">
+ENTHALPIES AND GIBBS ENERGIES OF FORMATION, ENTROPIES, AND NET ENTHALPIES OF COMBUSTION OF INORGANIC AND ORGANIC COMPOUNDS AT 298.15 K</a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div id="collapse10" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading10">
+                                                                            <div class="panel-body">
+                                                                                <section class="container-fluid">
+
+                                                                                    <div class="row">
+                                                                                        <div class="col col-lg-12">
+
+
+                                                                                            <div class="list-group" id="list-tab" role="tablist">
+                                                                                                <div class="table-responsive">
+                                                                                                    <table class="table table-hover display expandable-table">
+                                                                                                        <thead>
+                                                                                                            <tr>
+                                                                                                                <th style="width: 10%;">Ideal gas enthalpy of formation, J/kmol × 1E-07</th>
+                                                                                                                <th style="width: 10%;">Ideal gas Gibbs energy of formation, J/kmol × 1E-07</th>
+                                                                                                                <th style="width: 20%;">Ideal gas entropy, J/(kmol.K) × 1E-05</th>
+                                                                                                                <th style="width: 20%;">Standard net enthalpy of combustion, J/kmol × 1E-09</th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tr>
+
+                                                                                                            <td>{{eandg.IdealgasEnthalpyE07}}</td>
+                                                                                                            <td>{{eandg.IdealgasGibbsE07}}</td>
+                                                                                                            <td>{{eandg.IdealgasEntropyE05}}</td>
+                                                                                                            <td>{{eandg.StandardnetEnthalpyE09}}</td>
+                                                                                                        </tr>
+                                                                                                    </table>
+                                                                                                </div>
+
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                </section>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- /ENTHALPIES AND GIBBS ENERGIES OF FORMATION, ENTROPIES, AND NET ENTHALPIES OF COMBUSTION OF INORGANIC AND ORGANIC COMPOUNDS AT 298.15 C -->
+                                                                        {% endif %} {% if vvios %}
+
+
+                                                                        <!-- VAPOR VISCOSITY OF INORGANIC AND ORGANIC SUBSTANCES -->
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading" role="tab" id="heading11">
+                                                                                <h4 class="panel-title">
+                                                                                    <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse11" aria-expanded="true" aria-controls="collapse11">
+VAPOR VISCOSITY OF INORGANIC AND ORGANIC SUBSTANCES (Pa.s)</a>
+                                                                                </h4>
+                                                                            </div>
+                                                                            <div id="collapse11" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading11">
+                                                                                <div class="panel-body">
+                                                                                    <section class="container-fluid">
+
+                                                                                        <div class="row">
+                                                                                            <!-- <div class="col col-lg-12">
+
+
+                                                                                                <div class="list-group" id="list-tab" role="tablist">
+                                                                                                    <div class="table-responsive">
+                                                                                                        <table class="table table-hover display expandable-table">
+                                                                                                            <thead>
+                                                                                                                <tr>
+                                                                                                                    <th>C1</th>
+                                                                                                                    <th>C2</th>
+                                                                                                                    <th>C3</th>
+                                                                                                                    <th>C4</th>
+                                                                                                                    <th>T<sub>min</sub>, K</th>
+                                                                                                                    <th>Viscosity at T<sub>min</sub></th>
+                                                                                                                    <th>T<sub>max</sub>, K</th>
+                                                                                                                    <th>Viscosity at T<sub>max</sub></th>
+                                                                                                                </tr>
+                                                                                                            </thead>
+                                                                                                            <tr>
+
+                                                                                                                <td>{{vvios.C1}}</td>
+                                                                                                                <td>{{vvios.C2}}</td>
+                                                                                                                <td>{{vvios.C3}}</td>
+                                                                                                                <td>{{vvios.C4}}</td>
+                                                                                                                <td>{{vvios.Tmin}}</td>
+                                                                                                                <td>{{vvios.VsTmin}}</td>
+                                                                                                                <td>{{vvios.Tmax}}</td>
+                                                                                                                <td>{{vvios.VsTmax}}</td>
+                                                                                                            </tr>
+                                                                                                        </table>
+                                                                                                    </div>
+
+                                                                                                </div> -->
+
+                                                                                                <div class="col col-lg-12">
+                                                                                                <table class="table tablevvios">
+                                                                                                    <thead>
+                                                                                                        <tr>
+                                                                                                            <th class="text-center">Enter temperature</th>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <td class="title is-4 text-center">Temperature limit: {{vvios.Tmin}} ≤ T (K) ≤ {{vvios.Tmax}}</td>
+                                                                                                        </tr>
+                                                                                                    </thead>
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <td><input class="vviostemp form-control" type="text"></td>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+
+                                                                                                </table>
+
+                                                                                                <div class="columns">
+                                                                                                    <div class="column">
+                                                                                                        <h3 class="title is-4 text-center">Vapor Viscosity(μ) = <span class="vapvis"></span> Pa.s</h3>
+                                                                                                        <p class="title is-4 text-center"><span class="vaporvisco"></span></p>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                            </div>
+                                                                                            </div>
+
+                                                                                    </section>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- /VAPOR VISCOSITY OF INORGANIC AND ORGANIC SUBSTANCES -->
+                                                                            {% endif %} {% if viol %}
+
+
+                                                                            <!-- VISCOSITY OF INORGANIC AND ORGANIC LIQUIDS -->
+                                                                            <div class="panel panel-default">
+                                                                                <div class="panel-heading" role="tab" id="heading12">
+                                                                                    <h4 class="panel-title">
+                                                                                        <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse12" aria-expanded="true" aria-controls="collapse12">
+VISCOSITY OF INORGANIC AND ORGANIC LIQUIDS (Pa.s)</a>
+                                                                                    </h4>
+                                                                                </div>
+                                                                                <div id="collapse12" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading12">
+                                                                                    <div class="panel-body">
+                                                                                        <section class="container-fluid">
+
+                                                                                            <div class="row">
+                                                                                                <!-- <div class="col col-lg-12">
+
+
+                                                                                                    <div class="list-group" id="list-tab" role="tablist">
+                                                                                                        <div class="table-responsive">
+                                                                                                            <table class="table table-hover display expandable-table">
+                                                                                                                <thead>
+                                                                                                                    <tr>
+                                                                                                                        <th>C1</th>
+                                                                                                                        <th>C2</th>
+                                                                                                                        <th>C3</th>
+                                                                                                                        <th>C4</th>
+                                                                                                                        <th>C5</th>
+                                                                                                                        <th>T<sub>min</sub>, K</th>
+                                                                                                                        <th>Viscosity at T<sub>min</sub></th>
+                                                                                                                        <th>T<sub>max</sub>, K</th>
+                                                                                                                        <th>Viscosity at T<sub>max</sub></th>
+                                                                                                                    </tr>
+                                                                                                                </thead>
+                                                                                                                <tr>
+
+                                                                                                                    <td>{{viol.C1}}</td>
+                                                                                                                    <td>{{viol.C2}}</td>
+                                                                                                                    <td>{{viol.C3}}</td>
+                                                                                                                    <td>{{viol.C4}}</td>
+                                                                                                                    <td>{{viol.C5}}</td>
+                                                                                                                    <td>{{viol.Tmin}}</td>
+                                                                                                                    <td>{{viol.VsTmin}}</td>
+                                                                                                                    <td>{{viol.Tmax}}</td>
+                                                                                                                    <td>{{viol.VsTmax}}</td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </div>
+
+                                                                                                    </div> -->
+                                                                                                    <div class="col col-lg-12">
+                                                                                                    <table class="table tableviol">
+                                                                                                        <thead>
+                                                                                                            <tr>
+                                                                                                                <th class="text-center">Enter temperature</th>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td class="title is-4 text-center">Temperature limit: {{viol.Tmin}} ≤ T (K) ≤ {{viol.Tmax}}</td>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            <tr>
+                                                                                                                <td><input class="violtemp form-control" type="text"></td>
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+
+                                                                                                    </table>
+
+                                                                                                    <div class="columns">
+                                                                                                        <div class="column">
+                                                                                                            <h3 class="title is-4 text-center">Viscosity(μ) = <span class="vis"></span> Pa.s</h3>
+                                                                                                            <p class="title is-4 text-center"><span class="visco"></span></p>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                            </div>
+                                                                                                </div>
+
+                                                                                        </section>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- /VISCOSITY OF INORGANIC AND ORGANIC LIQUIDS -->
+                                                                                {% endif %} 
+                                                                                {% if vtios %}
+
+
+                                                                            <!-- VISCOSITY OF INORGANIC AND ORGANIC LIQUIDS -->
+                                                                            <div class="panel panel-default">
+                                                                                <div class="panel-heading" role="tab" id="heading13">
+                                                                                    <h4 class="panel-title">
+                                                                                        <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse13" aria-expanded="true" aria-controls="collapse13">
+VAPOR THERMAL CONDUCTIVITY OF INORGANIC AND ORGANIC SUBSTANCES [W/(m.K)]</a>
+                                                                                    </h4>
+                                                                                </div>
+                                                                                <div id="collapse13" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading13">
+                                                                                    <div class="panel-body">
+                                                                                        <section class="container-fluid">
+
+                                                                                            <div class="row">
+                                                                                                <!-- <div class="col col-lg-12">
+
+
+                                                                                                    <div class="list-group" id="list-tab" role="tablist">
+                                                                                                        <div class="table-responsive">
+                                                                                                            <table class="table table-hover display expandable-table">
+                                                                                                                <thead>
+                                                                                                                    <tr>
+                                                                                                                        <th>C1</th>
+                                                                                                                        <th>C2</th>
+                                                                                                                        <th>C3</th>
+                                                                                                                        <th>C4</th>
+                                                                                                                        <th>T<sub>min</sub>, K</th>
+                                                                                                                        <th>Viscosity at T<sub>min</sub></th>
+                                                                                                                        <th>T<sub>max</sub>, K</th>
+                                                                                                                        <th>Viscosity at T<sub>max</sub></th>
+                                                                                                                    </tr>
+                                                                                                                </thead>
+                                                                                                                <tr>
+
+                                                                                                                    <td>{{vtios.C1}}</td>
+                                                                                                                    <td>{{vtios.C2}}</td>
+                                                                                                                    <td>{{vtios.C3}}</td>
+                                                                                                                    <td>{{vtios.C4}}</td>
+                                                                                                                    <td>{{vtios.Tmin}}</td>
+                                                                                                                    <td>{{vtios.TCTmin}}</td>
+                                                                                                                    <td>{{vtios.Tmax}}</td>
+                                                                                                                    <td>{{vtios.TCTmax}}</td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </div>
+
+                                                                                                    </div> -->
+                                                                                                    <div class="col col-lg-12">
+                                                                                                        <table class="table tablevtios">
+                                                                                                            <thead>
+                                                                                                                <tr>
+                                                                                                                    <th class="text-center">Enter Temperature</th>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <td class="title is-4 text-center">Temperature limit: {{vtios.Tmin}} ≤ T (K) ≤ {{vtios.Tmax}}</td>
+                                                                                                                </tr>
+                                                                                                            </thead>
+                                                                                                            <tbody>
+                                                                                                                <tr>
+                                                                                                                    <td><input class="vtiostemp form-control" type="text"></td>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </tbody>
+
+                                                                                                        </table>
+
+                                                                                                        <div class="columns">
+                                                                                                            <div class="column">
+                                                                                                                <h3 class="title is-4 text-center">Vapor Thermal Cond.(k) = <span class="vapt"></span> W/(m.K)</h3>
+                                                                                                                <p class="title is-4 text-center"><span class="vapthermal"></span></p>
+                                                                                                            </div>
+                                                                                                        </div>
+
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                        </section>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- /VISCOSITY OF INORGANIC AND ORGANIC LIQUIDS -->
+                                                                                {% endif %}
+                                                                                {% if tciol %}
+
+
+                                                                                <!-- THERMAL CONDUCTIVITY OF INORGANIC AND ORGANIC LIQUIDS -->
+                                                                                <div class="panel panel-default">
+                                                                                    <div class="panel-heading" role="tab" id="heading14">
+                                                                                        <h4 class="panel-title">
+                                                                                            <a class="btn btn-info btn-lg btn-block" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse14" aria-expanded="true" aria-controls="collapse14">
+THERMAL CONDUCTIVITY OF INORGANIC AND ORGANIC LIQUIDS W/(m.K)</a>
+                                                                                        </h4>
+                                                                                    </div>
+                                                                                    <div id="collapse14" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading14">
+                                                                                        <div class="panel-body">
+                                                                                            <section class="container-fluid">
+
+                                                                                                <div class="row">
+                                                                                                    <!-- <div class="col col-lg-12">
+
+
+                                                                                                        <div class="list-group" id="list-tab" role="tablist">
+                                                                                                            <div class="table-responsive">
+                                                                                                                <table class="table table-hover display expandable-table">
+                                                                                                                    <thead>
+                                                                                                                        <tr>
+                                                                                                                            <th>C1</th>
+                                                                                                                            <th>C2</th>
+                                                                                                                            <th>C3</th>
+                                                                                                                            <th>C4</th>
+                                                                                                                            <th>C5</th>
+                                                                                                                            <th>T<sub>min</sub>, K</th>
+                                                                                                                            <th>Thermal Cond. at T<sub>min</sub></th>
+                                                                                                                            <th>T<sub>max</sub>, K</th>
+                                                                                                                            <th>Thermal Cond. at T<sub>max</sub></th>
+                                                                                                                        </tr>
+                                                                                                                    </thead>
+                                                                                                                    <tr>
+
+                                                                                                                        <td>{{tciol.C1}}</td>
+                                                                                                                        <td>{{tciol.C2}}</td>
+                                                                                                                        <td>{{tciol.C3}}</td>
+                                                                                                                        <td>{{tciol.C4}}</td>
+                                                                                                                        <td>{{tciol.C5}}</td>
+                                                                                                                        <td>{{tciol.Tmin}}</td>
+                                                                                                                        <td>{{tciol.TCTmin}}</td>
+                                                                                                                        <td>{{tciol.Tmax}}</td>
+                                                                                                                        <td>{{tciol.TCTmax}}</td>
+                                                                                                                    </tr>
+                                                                                                                </table>
+                                                                                                            </div>
+
+                                                                                                        </div> -->
+                                                                                                        <div class="col col-lg-12">
+                                                                                                            <table class="table tabletciol">
+                                                                                                                <thead>
+                                                                                                                    <tr>
+                                                                                                                        <th class="text-center">Enter temperature</th>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                        <td class="title is-4 text-center">Temperature limit: {{tciol.Tmin}} ≤ T (K) ≤ {{tciol.Tmax}}</td>
+                                                                                                                    </tr>
+                                                                                                                </thead>
+                                                                                                                <tbody>
+                                                                                                                    <tr>
+                                                                                                                        <td><input class="tcioltemp form-control" type="text"></td>
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                </tbody>
+
+                                                                                                            </table>
+
+                                                                                                            <div class="columns">
+                                                                                                                <div class="column">
+                                                                                                                    <h3 class="title is-4 text-center">Thermal Cond.(k) = <span class="therm"></span> W/(m.K)</h3>
+                                                                                                                    <p class="title is-4 text-center"><span class="thermal"></span></p>
+                                                                                                                </div>
+                                                                                                            </div>
+
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                            </section>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- /VAPOR THERMAL CONDUCTIVITY OF INORGANIC AND ORGANIC SUBSTANCES -->
+                                                                                    <br>
+                                                                                    <br> {% endif %}
+
+                                                                                </div>
+                                                                                <!-- /ACCORDION PARENT -->
+                            </section>
+
+                        </section>
+                        <!-- /Row -->
+                        <br><br>
+                        <h4>REFERENCE:</h4>
+                        <P>Values in these tables were taken from the Design Institute for Physical Properties (DIPPR) of the American Institute of Chemical Engineers (AIChE), copyright 2007 AIChE and reproduced with permission of AICHE and of the DIPPR
+                            Evaluated Process Design Data Project Steering Committee. Their source should be cited as R. L. Rowley, W. V. Wilding, J. L. Oscarson, Y. Yang, N. A. Zundel, T. E. Daubert, R. P. Danner, DIPPR® Data Compilation of Pure Chemical
+                            Properties, Design Institute for Physical Properties, AIChE, New York (2007).</P>
+                    </section>
+                    {% include "footer.html" %}
+                    <!-- /container -->
+                </section>
+                <!-- /content -->
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <!-- partial -->
+                </div>
+                <!-- main-panel ends -->
+                </div>
+                <!-- page-body-wrapper ends -->
+                </div>
+                <!-- container-scroller -->
+                {% endblock static %}{% block script_form %}
+                {% if vpiol %}
+                <script type="text/javascript">
+                    function convert(value) {
+                        return value.replace(/e\+?/, ' x 10^')
+                        }
+                    //script for vapour pressure
+                        $('.tablevpiol input').on("input", function() {
+                            vap = []
+                            var $tr = $(this).closest('tr');
+                            var t = $("input.vpioltemp", $tr).val();
+                            var C1 = parseFloat({{vpiol.C1}});
+                            var C2 = parseFloat({{vpiol.C2}});
+                            var C3 = parseFloat({{vpiol.C3}});
+                            var C4 = parseFloat({{vpiol.C4}});
+                            var C5 = parseFloat({{vpiol.C5}});
+                            console.log(t)
+                            vap = Math.exp(C1 + (C2/t) + (C3*Math.log(t)) + C4*(t**C5));
+                            vap = vap.toExponential(3);
+                            vap = convert(vap);
+                            vape = '';
+                            if (t < {{vpiol.Tmin}}){
+                                vape = 'Temperature can not be lower than' + ' ' + {{vpiol.Tmin}}+'K';
+                                vap = 0;
+                            } else if (t > {{vpiol.Tmax}}){
+                                vape = 'Temperature can not be higher than' + ' ' + {{vpiol.Tmax}}+'K';
+                                vap = 0;
+                            } else{
+                                vape = ''
+                            }
+                            console.log(t)
+                            $('.vapored').text(vape);
+                            $('.vapor').text(vap);
+                        });
+                    </script>
+                {% endif %}
+                
+                {% if diol %}
+                   <script type="text/javascript">
+                    function convert(value) {
+                            return value.replace(/e\+?/, ' x 10^')
+                            }
+                //script for density
+                    $('.tablediol input').on("input", function() {
+                        den = []
+                        var $tr = $(this).closest('tr');
+                        var temperature = $("input.dioltemp", $tr).val();
+                        var C1 = parseFloat({{diol.C1}});
+                        var C2 = parseFloat({{diol.C2}});
+                        var C3 = parseFloat({{diol.C3}});
+                        var C4 = parseFloat({{diol.C4}});
+                        den = C1 / (C2 ** (1 + (1 - (temperature / C3)) ** C4));
+                        den = den.toExponential(4);
+                        den = convert(den);
+                        dent=''
+                        if (temperature < {{diol.Tmin}}){
+                            dent = 'Temperature can not be lower than' + ' ' + {{diol.Tmin}}+'K';
+                            den = 0;
+                        } else if (temperature > {{diol.Tmax}}){
+                            dent = 'Temperature can not be higher than' + ' ' + {{diol.Tmax}}+'K';
+                            den = 0;
+                        } else{
+                            dent = ''
+                        }
+                        $('.amounted').text(dent);
+                        $('.amount').text(den);
+                    });
+                </script> 
+                {% endif %}
+                    
+                
+                {% if hciol %}
+                    {% if hciol.eqn == '1' %}
+                <script type="text/javascript">
+                    function convert(value) {
+                            return value.replace(/e\+?/, ' x 10^')
+                            }
+                //script for heat capacities of inorganic and organic liquids
+                    $('.tablehciol1 input').on("input", function() {
+                        hciol1 = []
+                        var $tr = $(this).closest('tr');
+                        var t = $("input.1hcioltemp", $tr).val();
+                        var C1 = parseFloat({{hciol.C1}});
+                        var C2 = parseFloat({{hciol.C2}});
+                        var C3 = parseFloat({{hciol.C3}});
+                        var C4 = parseFloat({{hciol.C4}});
+                        var C5 = parseFloat({{hciol.C5}});
+                        hciol1 = C1 + C2*t + C3*(t**2) + C4*(t**3) + C5*(t**4)
+                        hciol1 = hciol1.toExponential(4);
+                        hciol1 = convert(hciol1);
+                        dent='';
+                        if (t < {{hciol.Tmin}}){
+                            dent = 'Temperature can not be lower than' + ' ' + {{hciol.Tmin}}+'K';
+                            hciol1 = 0;
+                        } else if (t > {{hciol.Tmax}}){
+                            dent = 'Temperature can not be higher than' + ' ' + {{hciol.Tmax}}+'K';
+                            hciol1 = 0;
+                        } else{
+                            dent = ''
+                        }
+                        $('.heatcap1').text(dent);
+                        $('.heatcapiol1').text(hciol1);
+                    });
+                </script>
+                {% elif hciol.eqn == '2' %}
+                <script type="text/javascript">
+                    function convert(value) {
+                        return value.replace(/e\+?/, ' x 10^')
+                        }
+                //script for heat capacities of inorganic and organic liquids
+                    $('.tablehciol input').on("input", function() {
+                        hciol = []
+                        var $tr = $(this).closest('tr');
+                        var temperature = $("input.hcioltemp", $tr).val();
+                        var C1 = parseFloat({{hciol.C1}});
+                        var C2 = parseFloat({{hciol.C2}});
+                        var C3 = parseFloat({{hciol.C3}});
+                        var C4 = parseFloat({{hciol.C4}});
+                        var C5 = parseFloat({{hciol.C5}});
+                        Tr = temperature / {{ccioc.Tc}}
+                        t = 1 - Tr
+                        couple1 = (C1**2)/t
+                        couple2 = C2
+                        couple3 = -2*C1*C3*t
+                        couple4 = -(C1*C4*(t**2))
+                        couple5 = -((C3**2)*(t**3))/3
+                        couple6 = -(C3*C4*(t**4))/2
+                        couple7 = -((C4**2)*(t**5))/5
+                        hciol = couple1 + couple2 + couple3 + couple4 + couple5 + couple6 + couple7 
+                        hciol = hciol.toExponential(4);
+                        hciol = convert(hciol);
+                        dent='';
+                        if (temperature < {{hciol.Tmin}}){
+                            dent = 'Temperature can not be lower than' + ' ' + {{hciol.Tmin}}+'K';
+                            hciol = 0;
+                        } else if (temperature > {{hciol.Tmax}}){
+                            dent = 'Temperature can not be higher than' + ' ' + {{hciol.Tmax}}+'K';
+                            hciol = 0;
+                        } else{
+                            dent = ''
+                        }
+                        $('.heatcap').text(dent);
+                        $('.heatcapiol').text(hciol);
+                    });
+                </script>
+                {% endif %}
+                {% endif %}
+                    
+                
+                
+                
+                {% if hviol %}
+                   <script type="text/javascript">
+                    function convert(value) {
+                        return value.replace(/e\+?/, ' x 10^')
+                        }
+                //script for heat of vaporization of inorganic and organic
+                    $('.tablehviol input').on("input", function() {
+                        hov = []
+                        var $tr = $(this).closest('tr');
+                        var t = $("input.hvioltemp", $tr).val();
+                        var C1 = parseFloat({{hviol.C1x07}});
+                        var C2 = parseFloat({{hviol.C2}});
+                        var C3 = parseFloat({{hviol.C3}});
+                        var C4 = parseFloat({{hviol.C4}});
+                        var C5 = parseFloat({{0}});
+                        var tc = parseFloat({{ccioc.Tc}})
+                        tr = t/tc
+                        hov = C1*(1-tr)**(C2 + (C3*tr) + (C4*(tr**2)) + C5*(tc**3));
+                        hov = hov.toExponential(4);
+                        hov = convert(hov);
+
+                        if (t < {{hviol.Tmin}}){
+                            hovp = 'Temperature can not be lower than' + ' ' + {{hviol.Tmin}}+'K';
+                            hov = 0;
+                        } else if (t > {{hviol.Tmax}}){
+                            hovp = 'Temperature can not be higher than' + ' ' + {{hviol.Tmax}}+'K';
+                            hov = 0;
+                        } else{
+                            hovp = ''
+                        }
+                        $('.heatofvapor').text(hovp);
+                        $('.heatofvap').text(hov);
+                    });
+                </script> 
+                {% endif %}
+                    
+                
+                {% if hccpiolp %}
+                  <script type="text/javascript">
+                    function convert(value) {
+                            return value.replace(/e\+?/, ' x 10^')
+                            }
+                //script for heat of capacity of inorganic and organic for polynomial
+                    $('.tablehccpiolp input').on("input", function() {
+                        hco = []
+                        var $tr = $(this).closest('tr');
+                        var t = $("input.hccpiolptemp", $tr).val();
+                        var C1 = parseFloat({{hccpiolp.C1}});
+                        var C2 = parseFloat({{hccpiolp.C2}});
+                        var C3 = parseFloat({{hccpiolp.C3}});
+                        var C4 = parseFloat({{hccpiolp.C4E05}});
+                        var C5 = parseFloat({{hccpiolp.C5E10}});
+                        hco = C1 + (C2*t) + (C3 * (t**2)) + (C4*(t**3)) + (C5 * (t**4));
+                        hco = hco.toExponential(4);
+                        hco = convert(hco);
+                        if (t < {{hccpiolp.Tmin}}){
+                            hovp = 'Temperature can not be lower than' + ' ' + {{hccpiolp.Tmin}} + ' Kelvin(K)';
+                            hco = 0;
+                        } else if (t > {{hccpiolp.Tmax}}){
+                            hovp = 'Temperature can not be higher than' + ' ' + {{hccpiolp.Tmax}} + ' Kelvin(K)';
+                            hco = 0;
+                        } else{
+                            hovp = ''
+                        }
+                        $('.polynomial').text(hovp);
+                        $('.poly').text(hco);
+                    });
+                </script>  
+                {% endif %}
+                    
+                
+                {% if vvios %}
+                   <script type="text/javascript">
+                   function convert(value) {
+                        return value.replace(/e\+?/, ' x 10^')
+                        }
+                //script for vapor viscousity of inorganic and organic
+                    $('.tablevvios input').on("input", function() {
+                        vvp = []
+                        var $tr = $(this).closest('tr');
+                        var t = $("input.vviostemp", $tr).val();
+                        var C1 = parseFloat({{vvios.C1}});
+                        var C2 = parseFloat({{vvios.C2}});
+                        var C3 = parseFloat({{vvios.C3}});
+                        var C4 = parseFloat({{vvios.C4}});
+                        vvp = C1*(t**C2) / (1 + (C3/t) + (C4 / (t**2)));
+                        //vvp = vvp.toFixed(10);
+                        vvp = vvp.toExponential(4);
+                        vvp = convert(vvp);
+                        if (t < {{vvios.Tmin}}){
+                            hovp = 'Temperature can not be lower than' + ' ' + {{vvios.Tmin}} + ' Kelvin(K)';
+                            vvp = 0;
+                        } else if (t > {{vvios.Tmax}}){
+                            hovp = 'Temperature can not be higher than' + ' ' + {{vvios.Tmax}} + ' Kelvin(K)';
+                            vvp = 0;
+                        } else{
+                            hovp = ''
+                        }
+                        $('.vaporvisco').text(hovp);
+                        $('.vapvis').text(vvp);
+                    });
+                </script> 
+                {% endif %}
+                    
+                
+
+                {% if viol %}
+                   <script type="text/javascript">
+                   function convert(value) {
+                        return value.replace(/e\+?/, ' x 10^')
+                        }
+                //script for viscosityof inorganic and organic
+                    $('.tableviol input').on("input", function() {
+                        vvp = []
+                        var $tr = $(this).closest('tr');
+                        var t = $("input.violtemp", $tr).val();
+                        var C1 = parseFloat({{viol.C1}});
+                        var C2 = parseFloat({{viol.C2}});
+                        var C3 = parseFloat({{viol.C3}});
+                        var C4 = parseFloat({{viol.C4}});
+                        var C5 = parseFloat({{viol.C5}});
+                        vis = Math.exp(C1 + (C2/t) + (C3*Math.log(t)) + C4*(t**C5));
+                        //vvp = vvp.toFixed(10);
+                        vis = vis.toExponential(4)
+                        vis = convert(vis)
+                        if (t < {{viol.Tmin}}){
+                            hovp = 'Temperature can not be lower than' + ' ' + {{viol.Tmin}} + ' Kelvin(K)';
+                            vis = 0;
+                        } else if (t > {{viol.Tmax}}){
+                            hovp = 'Temperature can not be higher than' + ' ' + {{viol.Tmax}} + ' Kelvin(K)';
+                            vis = 0;
+                        } else{
+                            hovp = ''
+                        }
+                        $('.visco').text(hovp);
+                        $('.vis').text(vis);
+                    });
+                </script> 
+                {% endif %}
+    
+                
+                
+                {% if vtios %}
+                  <script type="text/javascript">
+                  function convert(value) {
+                        return value.replace(/e\+?/, ' x 10^')
+                        }
+                //script for vap thermal
+                    $('.tablevtios input').on("input", function() {
+                        vti = []
+                        var $tr = $(this).closest('tr');
+                        var t = $("input.vtiostemp", $tr).val();
+                        var C1 = parseFloat({{vtios.C1}});
+                        var C2 = parseFloat({{vtios.C2}});
+                        var C3 = parseFloat({{vtios.C3}});
+                        var C4 = parseFloat({{vtios.C4}});
+                        vti = (C1 * (t ** C2)) / (1 + (C3/t) + (C4/(t**2)));
+                        vti = vti.toExponential(5);
+                        //vis = vis.toExponential(4)
+                        vti = convert(vti)
+                        if (t < {{vtios.Tmin}}){
+                            hovp = 'Temperature can not be lower than' + ' ' + {{vtios.Tmin}} + ' Kelvin(K)';
+                            vti = 0;
+                        } else if (t > {{vtios.Tmax}}){
+                            hovp = 'Temperature can not be higher than' + ' ' + {{vtios.Tmax}} + ' Kelvin(K)';
+                            vti = 0;
+                        } else{
+                            hovp = ''
+                        }
+                        $('.vapthermal').text(hovp);
+                        $('.vapt').text(vti);
+                    });
+                </script>  
+                {% endif %}
+                
+                
+                {% if tciol %}
+                  <script type="text/javascript">
+                    function convert(value) {
+                            return value.replace(/e\+?/, ' x 10^')
+                            }
+                //script for thermal cond inorganic and organic
+                    $('.tabletciol input').on("input", function() {
+                        ti = []
+                        var $tr = $(this).closest('tr');
+                        var t = $("input.tcioltemp", $tr).val();
+                        var C1 = parseFloat({{tciol.C1}});
+                        var C2 = parseFloat({{tciol.C2}});
+                        var C3 = parseFloat({{tciol.C3}});
+                        var C4 = parseFloat({{tciol.C4}});
+                        var C5 = parseFloat({{tciol.C5}});
+                        ti = C1 + (C2*t) + (C3 * (t**2)) + (C4*(t**3)) + (C5 * (t**4));
+                        ti = ti.toExponential(5);
+                        ti = convert(ti)
+                        //vis = vis.toExponential(4)
+                        if (t < {{tciol.Tmin}}){
+                            hovp = 'Temperature can not be lower than' + ' ' + {{tciol.Tmin}} + ' Kelvin(K)';
+                            ti = 0;
+                        } else if (t > {{tciol.Tmax}}){
+                            hovp = 'Temperature can not be higher than' + ' ' + {{tciol.Tmax}} + ' Kelvin(K)';
+                            ti = 0;
+                        } else{
+                            hovp = ''
+                        }
+                        $('.thermal').text(hovp);
+                        $('.therm').text(ti);
+                    });
+                </script>  
+                {% endif %}
+                    
+                
+                
+                {% if hccpiolh %}
+                  <script type="text/javascript">
+                  function convert(value) {
+                        return value.replace(/e\+?/, ' x 10^')
+                        }
+                //script for hyperbolic function
+                    $('.tablehccpiolh input').on("input", function() {
+                        hccpiolh = []
+                        var $tr = $(this).closest('tr');
+                        var t = $("input.hccpiolhtemp", $tr).val();
+                        var C1 = parseFloat({{hccpiolh.C1}});
+                        var C2 = parseFloat({{hccpiolh.C2}});
+                        var C3 = parseFloat({{hccpiolh.C3E03}});
+                        var C4 = parseFloat({{hccpiolh.C4E05}});
+                        var C5 = parseFloat({{hccpiolh.C5}});
+                        c3t = C3/t
+                        c5t = C5/t
+                        sinhc3t = (Math.exp(c3t) - Math.exp(-1*c3t)) / 2
+                        coshc5t = (Math.exp(c5t) + Math.exp(-1*c5t)) / 2
+                        sq1 = (c3t/sinhc3t)**2
+                        sq2 = (c5t/coshc5t)**2
+                        hccpiolh = C1 + C2*sq1 + C4*sq2;
+                        hccpiolh = hccpiolh.toExponential(5);
+                        hccpiolh = convert(hccpiolh)
+                        //vis = vis.toExponential(4)
+                        if (t < {{hccpiolh.Tmin}}){
+                            hovp = 'Temperature can not be lower than' + ' ' + {{hccpiolh.Tmin}} + ' Kelvin(K)';
+                            hccpiolh = 0;
+                        } else if (t > {{hccpiolh.Tmax}}){
+                            hovp = 'Temperature can not be higher than' + ' ' + {{hccpiolh.Tmax}} + ' Kelvin(K)';
+                            hccpiolh = 0;
+                        } else{
+                            hovp = ''
+                        }
+                        $('.hyperbolic').text(hovp);
+                        $('.hyperbol').text(hccpiolh);
+                    });
+                </script>  
+                {% endif %}
+                    
+                
+
+                {% endblock script_form %}

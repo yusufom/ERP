@@ -1,0 +1,30 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<div class="row">
+
+    {% include "stockside.html" %}
+    <div class="col-md-10 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <h1 class="card-title text-center">{{title}}</h1>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                        {% endfor %}
+                </ul>
+                {% endif %}
+                <form method='POST' action=''>
+                    {% csrf_token %} {{form|crispy}}
+                    <br>
+                    <div class="text-center">
+                        <input class="btn btn-primary" type="submit" value='Save' />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock changepassword %}

@@ -1,0 +1,178 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %}
+<div class="row">
+
+
+    <div class="col-md-10 grid-margin stretch-card">
+        <div class="card">
+            <span><a class="btn btn-secondary" href="{{request.META.HTTP_REFERER|escape}}" style="color:#565656;">Back</a></span>
+            <div class="card-body">
+                {% if messages %} {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags}}" {% endif %}>
+                    {{ message }}
+                    <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %} {% endif %}
+                <div class="row">
+                    <div class="col-sm-4">
+                        <img style="width: 180px; height:auto;" src="https://cozymltd-bucket.s3.amazonaws.com/staticfiles/images/cozym_ltd.png" alt="">
+                    </div>
+                    <div class="col-sm-4">
+                        <p><br><b style="color:#313D6D;">Corporate Head Office:</b> <br> 3B Abike Animashaun Street, <br>Off Durosimi Etti Street, <br> Lekki Phase 1, Lagos</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <p><br><b style="color:#313D6D;">Office:</b> 09070000251, 09070000252 <br> <b style="color:#313D6D;">Email:</b> info@cozymltd.com <br><b style="color:#313D6D;">Web:</b> www.cozymltd.com</p>
+                    </div>
+                </div>
+                <br><br>
+                <h2 class="text-center">PAYSLIP: {{payr.month }} {{payr.Year}}</h2>
+                <hr>
+
+
+
+
+                <div class="row" style="font-size: 10pt;">
+                    <div class="col-sm-3">
+                        <p><b>NAME: {{payr.employ}} </b></p>
+                        <p><b>DEPARTMENT: {{payr.employ.department}}</b></p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p><b>DESIGNATION: {{payr.employ.role}}</b></p>
+                        <p><b>EMPLOYEE ADDRESS: {{payr.employ.address}}</b></p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p><b>PAYMENT DATE: {{payr.paymentdate}}</b></p>
+                        <p><b>ACCOUNT NO: {{bank.account}}</b></p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p><b>DATE OF ENGAGEMENT: {{payr.employ.startdate}}</b></p>
+                    </div>
+                </div>
+
+                <div class="table">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <td style="width:20%; border: none; text-align: center;"><b>Earnings</b></td>
+                                <td style="width:20%; border: none;"></td>
+                            </tr>
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Basic</b></th>
+                                <td style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ basicd }}</td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">Housing</th>
+                                <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{housingd}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Transport</b></th>
+                                <td style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ transportd }}</td>
+                            </tr>
+                            {% if payr.overtime == '0' %}
+                            <tr></tr>
+                            {% else %}
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Overtime</b></th>
+                                <td style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ overtimed }}</td>
+                            </tr>
+                            {% endif %} {% if payr.bonus == '0' %}
+                            <tr></tr>
+                            {% else %}
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Bonus</b></th>
+                                <td style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ bonused }}</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; color:red; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Gross PAY</b></th>
+                                <td style="width:20%; border: 1px solid black;"></td>
+                                <td style="width:20%; color:red; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ grossd }}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <br>
+                <br>
+                <div class="table">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <td style="width:20%; border: none; text-align: center;"><b>Deductions</b></td>
+                                <td style="width:20%; border: none;"></td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">Paye</th>
+                                <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{payrd}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Pension</b></th>
+                                <td style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ pensiond }}</td>
+                            </tr>
+                            {% if payr.loan == '0' %}
+                            <tr></tr>
+                            {% else %}
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Loan</b></th>
+                                <td style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ loaned }}</td>
+                            </tr>
+                            {% endif %} {% if payr.otherd == '0' %}
+                            <tr></tr>
+                            {% else %}
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Other Deductions</b></th>
+                                <td style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ otherdd }}</td>
+                            </tr>
+                            {% endif %}
+
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Total</b></th>
+                                <td style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                                <td style="width:20%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ total }}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <br>
+                <br>
+                <div class="table">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+
+                            <tr>
+                                <td style="width:20%; border: none;"></td>
+                                <th style="width:20%; color:green; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"><b>Net Pay</b></th>
+                                <td style="width:20%; border: 1px solid black;"></td>
+                                <td style="width:20%; color:green; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{net}}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <br><br> {% if request.user.is_superuser or request.user.is_staff or request.user.is_HR %}
+                <div class="text-center">
+                    <a class="btn btn-dark" href="{% url 'dashboard:PayrollEdit' payr.id %}">Edit</a>
+                    <a class="btn btn-dark" href="{% url 'dashboard:PayrollDup' payr.id %}">Create New</a>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock changepassword %}

@@ -1,0 +1,75 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<section class="content">
+    <section class="container-fluid">
+
+        <!-- TABLE -->
+        <div class="table-responsive table-shadow">
+            <div class="text-center table-description">
+                <h2 class="title-h2" style="color: #2a17d3 !important;
+                    text-shadow: 1px 0px rgba(0,0,0,0.11)">Birthdays In {{ month }}</h2>
+            </div>
+
+            <section class="container-fluid">
+                <section class="row">
+                    <span>Total Birthdays this Month = {{count_birthdays}}</span>
+                </section>
+            </section>
+
+            {% if employees_birthday %}
+            <div class="table-responsive">
+                <table class="table table-hover display expandable-table">
+                    <thead>
+                        <tr>
+                            <!-- <th scope="col">#</th> -->
+                            <th scope="col">Staff</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Birth Date</th>
+                            <th scope="col">Celebration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in employees_birthday %}
+
+                        <tr>
+
+                            <td>{{ employee.get_full_name }}</td>
+                            <td>{{ employee.department }}</td>
+                            <td>{{ employee.get_pretty_birthday }}</td>
+
+                            {% if employee.birthday_today %}
+
+                            <td>💝🍾😍🎂😍🍾</td>
+
+                            {% elif employee.days_check_date_fade %}
+
+                            <td>Celebrated</td>
+
+                            {% else %}
+                            <td>In {{ employee.birthday_counter}}</td>
+
+                            {% endif %}
+                            <!-- if day is today 'present font, animated 	❤️ emoji' or count down -->
+                        </tr>
+
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+            {% else %}
+
+
+            <span>No Birthdays can be found this month.</span> {% endif %}
+
+        </div>
+        <!-- /TABLE -->
+
+    </section>
+    <!-- /container -->
+
+
+</section>
+
+{% endblock changepassword %}

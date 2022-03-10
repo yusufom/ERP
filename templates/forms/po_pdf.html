@@ -1,0 +1,244 @@
+<!Doctype html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <title>Purchase Order</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+
+
+</head>
+<style>
+    @media print {
+        h1 {
+            font-size: 16pt;
+            padding-bottom: -35px;
+            padding-top: -30px;
+        }
+        section {
+            -pdf-frame-border: 1;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-right {
+            text-align: right !important;
+        }
+        @page {
+            size: a4 portrait;
+            @frame header_frame {
+                /* Static Frame */
+                left: 30pt;
+                width: 500pt;
+                top: 70pt;
+                height: 80pt;
+            }
+            @frame content_frame {
+                /* Content Frame */
+                left: 20pt;
+                width: 530pt;
+                top: 180pt;
+                height: 632pt;
+            }
+            @frame footer_frame {
+                /* Another static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt;
+                width: 512pt;
+                top: 772pt;
+                height: 20pt;
+            }
+        }
+    }
+</style>
+
+<body>
+
+    <div id="header_content">
+        <table>
+            <tr>
+                <td><img style="width: 180px; height:auto;" src="https://cozymltd-bucket.s3.amazonaws.com/staticfiles/images/cozym_ltd.png" alt=""></td>
+                <td style="font-size: 15px;">
+                    <p><br><b style="color:#313D6D;">Corporate Head Office:</b> <br> 3B Abike Animashaun Street, <br>Off Durosimi Etti Street, <br> Lekki Phase 1, Lagos</p>
+                </td>
+                <td style="font-size: 15px;">
+                    <p><br><b style="color:#313D6D;">Office:</b> 09070000251, 09070000252 <br> <b style="color:#313D6D;">Email:</b> info@cozymltd.com <br><b style="color:#313D6D;">Web:</b> www.cozymltd.com</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="footer_content">
+        <p class="text-right">Page
+            <pdf:pagenumber>
+                of
+                <pdf:pagecount>
+        </p>
+    </div>
+
+
+
+    <h1 class="text-center">Purchase Order</h1>
+    <hr>
+
+
+
+
+    <div style="font-size: 10pt;">
+        <p><b>Order To:</b>
+            <U>{{purs.order_to}}</U> </p>
+    </div>
+
+    <div style="font-size: 10pt;" class="text-right">
+        <p><b>Order No: {{purs.order_no}}</b></p>
+        <p><b>Ship to:</b>
+            <U>{{purs.ship_to}}</U> </p>
+    </div>
+
+    <div style="font-size: 10pt;" class="row text-left">
+        <p><b>Payment Terms:</b>
+            <U>{{purs.payment_terms}}</U>
+        </p>
+        <p><b>Delivery Date:</b>
+            <U>{{purs.delivery_date}}</U>
+        </p>
+    </div>
+
+    <section>
+        <div style="border-bottom: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; font-size: 15px;" class="text-center">
+            <h3>Order Summary</h3>
+        </div>
+    </section>
+
+
+    <div style="font-size: 12px;">
+        <table>
+            <thead>
+                <tr>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;" scope="col"><b>No.</b></td>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;" scope="col">Item Description</th>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;" scope="col">Project</th>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;" scope="col">Quantity</th>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;" scope="col">Unit Price(N)</th>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;" scope="col">Total Price(N)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in ord %}
+                <tr>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width:30px">{{forloop.counter}}</td>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width:400px">{{o.item_description}}</td>
+                    {% if o.project %}
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{o.project}}</td>
+                    {% else %}
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                    {% endif %}
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{o.quantity}}</td>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{o.rate}}</td>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{o.amount}}</td>
+                </tr>
+                {% endfor %}
+                <tr style="border: none;">
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">Subtotal</th>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{purs.subtotal}}</td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">VAT (7.5%)</th>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{purs.VAT}}</td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">Freight</th>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{purs.freight}}</td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">Total</th>
+                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{purs.total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <p style="border: 1px solid black; padding: 5px 5px 5px 15px; font-size: 12px; "><b>Remarks:</b><br>{{purs.remarks}} </p>
+    </div>
+
+
+
+    <div style="font-size: 8pt;">
+        <h5>Terms and Conditions</h5>
+        <li>Please Send Copy of Your Invoice </li>
+        <li>Enter This Order in Accordance with The Prices, Terms, Delivery Method, And Specifications Listed Above</li>
+        <li> Please Notify Us Immediately If You Are Unable to Ship as Specified </li>
+        <li> Product and Service Delivery Shall Be Made in Accordance with The Terms of This Order/Contract</li>
+        <li> The Order Number Must Appear on All Documents Pertaining to The Order, Invoices, Packing Lists, Correspondence, And All</li>
+    </div>
+    <br>
+    <table>
+        <tr>
+            <td style="width: 250px;">
+                <p style="font-size: 9pt;"><img style="height: 40px; width:100px" src={{u.signature.path}} alt="image"> {{date}} </p>
+            </td>
+            <td>
+            </td>
+            {% if purs.status == 'Approved' %}
+            <td style="width: 250px;">
+                <p style="font-size: 9pt;"><img style="height: 40px; width:100px" src="{{a.signature.path}}" alt="image"> {{purs.mdate}}</p>
+            </td>
+            {% else %}
+            <td style="width: 250px;">
+                <p style="font-size: 9pt;"></p>
+            </td>
+            {% endif %}
+
+
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td style="border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width: 250px;">
+                <p style="font-size: 9pt; ">Signature and Date by: {{u.get_full_name}}</p>
+            </td>
+            <td>
+            </td>
+            {% if purs.status == 'Approved' %}
+            <td style="border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width: 250px;">
+                <p style="font-size: 9pt;">Signature and Date by: {{a.get_full_name}}</p>
+            </td>
+            {% else %}
+            <td style="border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width: 250px;">
+                <p style="font-size: 9pt;">Signature and Date by:</p>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
+</html>

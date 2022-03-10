@@ -1,0 +1,84 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<div class="col-md-12 grid-margin stretch-card">
+
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title text-center">{{title}}</h1>
+            <p class="card-description text-center"></p>
+            {% if messages %} {% for message in messages %}
+            <div {% if message.tags %} class="{{ message.tags}}" {% endif %}>
+                {{ message }}
+                <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            {% endfor %} {% endif %}
+            <div class="table-responsive">
+                <table class="table table-hover display expandable-table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Start Date</th>
+                            <th>End-Date</th>
+                            <th>Leave Type</th>
+                            <th>Days</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for leave in leave_list %}
+                        <tr>
+                            <td>{{ leave.user }}</td>
+                            <td>{{ leave.startdate }}</td>
+                            <td>{{ leave.enddate }}</td>
+
+                            <td>{{ leave.leavetype }}</td>
+                            <td>{{ leave.leave_days }}</td>
+                            {% if leave.status == 'Pending' %}
+                            <td><label class="badge badge-warning">{{ leave.status }}</label></td>
+                            {% elif leave.status == 'Approved'%}
+                            <td><label class="badge badge-success">{{ leave.status }}</label></td>
+                            {% elif leave.status == 'Rejected'%}
+                            <td><label class="badge badge-danger">{{ leave.status }}</label></td>
+                            {% elif leave.status == 'Cancelled'%}
+                            <td><label class="badge badge-danger">{{ leave.status }}</label></td>
+                            {% endif %}
+                            <td><a class="badge badge-info" href="{% url 'dashboard:UserleaveView' leave.id %}">View</a></td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+            <br><br>
+            <ul class="pagination" role="menubar" aria-label="Pagination">
+                {% if leave_list.has_previous %}
+                <li style="background-color: #4B49AC;"><a href="?page=1"><span>First</span></a></li>
+                <li><a href="?page={{leave_list.previous_page_number}}"><span>Previous</span></a></li>
+                {% else %}
+                <li><a href=""><span>First</span></a></li>
+                <li><a href=""><span>Previous</span></a></li>
+                {% endif %}
+                <li class="current"><a href="">{{ leave_list.number }}</a></li>
+                {% if leave_list.has_next %}
+                <li><a href="?page={{ leave_list.next_page_number }}"><span>Next</span></a></li>
+                <li><a href="?page={{ leave_list.paginator.num_pages }}"><span>Last</span></a></li>
+                {% else %}
+                <li><a href=""><span>Next</span></a></li>
+                <li><a href=""><span>Last</span></a></li>
+                {% endif %}
+
+            </ul>
+            <div class="text-right">
+                <p class="text-right">Page {{ leave_list.number }} of {{ leave_list.paginator.num_pages }}</p>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock changepassword %}

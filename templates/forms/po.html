@@ -1,0 +1,194 @@
+ {% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %}
+<div class="row">
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <span><a class="btn btn-secondary" href="{% url 'forms:viewPO' %}" style="color:#565656;">Back</a></span>
+            <div class="card-body">
+                {% if messages %} {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags}}" {% endif %}>
+                    {{ message }}
+                    <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %} {% endif %}
+                <div class="row">
+                    <div class="col-4">
+                        <img style="width: 180px; height:auto;" src="https://cozymltd-bucket.s3.amazonaws.com/staticfiles/images/cozym_ltd.png" alt="">
+                    </div>
+                    <div class="col-4">
+                        <p><br><b style="color:#313D6D;">Corporate Head Office:</b> <br> 3B Abike Animashaun Street, <br>Off Durosimi Etti Street, <br> Lekki Phase 1, Lagos</p>
+                    </div>
+                    <div class="col-4">
+                        <p><br><b style="color:#313D6D;">Office:</b> 09070000251, 09070000252 <br> <b style="color:#313D6D;">Email:</b> info@cozymltd.com <br><b style="color:#313D6D;">Web:</b> www.cozymltd.com</p>
+                    </div>
+                </div>
+
+
+
+                <h2 class="text-center">Purchase Order</h2>
+                <hr>
+
+
+
+
+                <div style="font-size: 10pt;">
+                    <p><b>Order To:</b>
+                        <U>{{purs.order_to}}</U> </p>
+                </div>
+
+                <div style="font-size: 10pt;">
+                    <p><b>Order No: {{purs.order_no}}</b></p>
+                    <p><b>Ship to:</b>
+                        <U>{{purs.ship_to}}</U> </p>
+                </div>
+
+                <div style="font-size: 10pt;">
+                    <p><b>Payment Terms:</b>
+                        <U>{{purs.payment_terms}}</U>
+                    </p>
+                    <p><b>Delivery Date:</b>
+                        <U>{{purs.delivery_date}}</U>
+                    </p>
+                    <p><b>Vat Choice</b>
+                        <U>{{purs.Vatchoice}}</U>
+                    </p>
+                </div>
+
+                <section>
+                    <div style="border-bottom: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; font-size: 15px;" class="text-center">
+                        <h3>Order Summary</h3>
+                    </div>
+                </section>
+
+
+                <div class="table-responsive">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+                            <tr>
+                                <th><b>No.</b></th>
+                                <th>Item Description</th>
+                                <th>Project</th>
+                                <th>Quantity</th>
+                                <th>Unit Price(N)</th>
+                                <th>Total Price(N)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for o in ord %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{o.item_description}}</td>
+                                <td>{{o.project}}</td>
+                                <td>{{o.quantity}}</td>
+                                <td>{{o.rate}}</td>
+                                <td>{{o.amount}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <th>Subtotal</th>
+                                <td>{{subtotald}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <th>VAT (7.5%)</th>
+                                <td>{{vatd}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <th>Freight</th>
+                                <td>{{freightd}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <th>Total</th>
+                                <td>{{totald}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <p style="border: 1px solid black; padding: 5px 5px 5px 15px; font-size: 12px; "><b>Remarks:</b><br>{{purs.remarks}} </p>
+                </div>
+
+
+
+                <div style="font-size: 8pt;">
+                    <h5>Terms and Conditions</h5>
+                    <li>Please Send Copy of Your Invoice </li>
+                    <li>Enter This Order in Accordance with The Prices, Terms, Delivery Method, And Specifications Listed Above</li>
+                    <li> Please Notify Us Immediately If You Are Unable to Ship as Specified </li>
+                    <li> Product and Service Delivery Shall Be Made in Accordance with The Terms of This Order/Contract</li>
+                    <li> The Order Number Must Appear on All Documents Pertaining to The Order, Invoices, Packing Lists, Correspondence, And All</li>
+                </div>
+                <br>
+                <br>
+                <br>
+                <table>
+                    <tr>
+                        <td style="width: 200px;">
+                            <p style="font-size: 9pt;"><img style="height: 40px; width:100px" src="{{u.signature.url}}" alt=""> {{date}} </p>
+                        </td>
+                        <td>
+                        </td>
+                        {% if purs.status == 'Approved' %}
+                        <td style="width: 200px;">
+                            <p style="font-size: 9pt;"><img style="height: 40px; width:100px" src="{{a.signature.url}}" alt="">{{purs.mdate}} </p>
+                        </td>
+                        {% else %}
+                        <td style="width: 200px;">
+                            <p style="font-size: 9pt;"></p>
+                        </td>
+                        {% endif %}
+
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td style="border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width: 200px;">
+                            <p style="font-size: 9pt; ">Signature and Date by: {{u.get_full_name}}</p>
+                        </td>
+                        <td>
+                        </td>
+                        {% if purs.status == 'Approved' %}
+                        <td style="border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width: 200px;">
+                            <p style="font-size: 9pt;">Signature and Date by: {{a.get_full_name}}</p>
+                        </td>
+                        {% else %}
+                        <td style="border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width: 200px;">
+                            <p style="font-size: 9pt;">Signature and Date by:</p>
+                        </td>
+                        {% endif %}
+                    </tr>
+                </table>
+
+                {% if request.user.is_superuser or request.user.is_staff or request.user.is_Manager %}
+                <div class="row">
+                    <div class="col col-lg-12 col-sm-12 text-center">
+                        <div class="btn-group btn-group-justified">
+                            {% if purs.po_approved %}
+                            <a href="{% url 'forms:unPOapprove' purs.id %}" class="btn btn-primary" name='unapprove'>UNAPPROVE</a> {% else %}
+                            <a href="{% url 'forms:POapprove' purs.id %}" class="btn btn-primary" name='approve'>APPROVE</a> {% endif %} {% if purs.status == 'Rejected' %}
+                            <a href="{% url 'forms:unPOreject' purs.id %}" class="btn btn-warning" name='reject'>UNREJECT</a> {% else %}
+                            <a href="{% url 'forms:POreject' purs.id %}" class="btn btn-warning" name='reject'>REJECT</a> {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endblock changepassword %}

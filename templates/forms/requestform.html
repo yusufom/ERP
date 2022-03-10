@@ -1,0 +1,233 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %}
+<div class="row">
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <span><a class="btn btn-secondary" href="{% url 'forms:viewRF' %}" style="color:#565656;">Back</a></span>
+            <div class="card-body">
+                {% if messages %} {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags}}" {% endif %}>
+                    {{ message }}
+                    <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %} {% endif %}
+                <div class="text-center">
+                    {% if rfs.is_fapproved == False %}
+                    <p>Awaiting approval</p>
+                    {% else %} {% if rfs.get_status %}
+                    <div class="badge badge-success">Paid</div>
+                    {% else %}
+                    <div class="badge badge-warning">Not Paid</div>{% endif %}{% endif %}
+                </div>
+                <div class="card-body">
+                    <div>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 60%; ">
+                                    <h2 style="color:#9e1d1d; font-size: 17px; "><u>Cash/Cheque Requistion Form</u></h2>
+                                </td>
+
+                                <td>
+                                    <p style="color:#9e1d1d; font-size: 13px; "><b>CCTR Number</b></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 93%; ">
+                                </td>
+                                <td style="font-size:10px;border: 2px solid rgb(16, 14, 128);font-size: 30px; text-align: center; padding-top: 5px; padding-left: 5px; height: 10px; ">
+                                    <p>NO: {{rfs.cctr}}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                    <div>
+                        <h2 class="text-center ">COZYM LIMITED</h2>
+                    </div>
+
+
+                    <div style="font-size: 14px; ">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 35%; border: 1px solid rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white; ">Requisition Date and Time
+                                    </th>
+                                    <th style="width: 10%;border: 1px solid white; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white; ">
+                                        Currency
+                                    </th>
+                                    <th style="border: 1px solid white; border-right-color: rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white; ">Requesting Name & Signature
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border: 1px solid rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px; ">{{rfs.created}}
+                                    </td>
+                                    <td style="border: 1px solid rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px; ">{{rfs.currency}}
+                                    </td>
+                                    <td style="border: 1px solid rgb(16, 14, 128); border-collapse: collapse; text-align: center; padding-top: 5px; "> {{u.get_full_name}} <img style="width: 100px; height: 30px;" src="{{u.signature.url}}" alt="image">
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <div style="font-size: 13px; ">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <td style="width: 5%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white; " scope="col "><b>No.</b></td>
+                                    <th style="width: 47%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white; " scope="col ">Item Description</th>
+                                    <th style="width: 10%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white; " scope="col ">Project</th>
+                                    <th style="width: 10%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white; " scope="col ">Quantity</th>
+                                    <th style="width: 13%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white; " scope="col ">Unit Price</th>
+                                    <th style="width: 15%; border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; background-color: rgb(16, 14, 128); color: white; " scope="col ">Extended Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for r in rfsd %}
+                                <tr>
+                                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width:30px ">{{forloop.counter}}</td>
+                                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; width:400px ">{{r.item_description}}</td>
+                                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; ">{{r.project}}</td>
+                                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; ">{{r.quantity}}</td>
+                                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; ">{{r.rate}}</td>
+                                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; ">{{r.amount}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr style="border: none; ">
+                                    <td style="border: none; "></td>
+                                    <td style="border: none; font-size: 16px; ">Other Comment: {{rfs.comment}}</td>
+                                    <td style="border: none; "></td>
+                                    <td style="border: none; "></td>
+                                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center ;background-color: rgb(16, 14, 128); color: white; padding-top: 5px; ">Subtotal</th>
+                                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; ">{{subtotald}}</td>
+                                </tr>
+                                <tr style="border: none; ">
+                                    <td style="border: none; "></td>
+                                    <td style="border: none; "></td>
+                                    <td style="border: none; "></td>
+                                    <td style="border: none; "></td>
+                                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center;background-color: rgb(16, 14, 128); color: white; padding-top: 5px; ">VAT 7.5%</th>
+                                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; ">{{vatd}}</td>
+                                </tr>
+                                <tr style="border: none; ">
+                                    <td style="border: none; "></td>
+                                    <td style="border: none; "></td>
+                                    <td style="border: none; "></td>
+                                    <td style="border: none; "></td>
+                                    <th style="border: 1px solid black; border-collapse: collapse; text-align: center;background-color: rgb(16, 14, 128); color: white; padding-top: 5px; ">Total</th>
+                                    <td style="border: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; ">{{totald}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <br>
+                    <div style="font-size: 14px; color: rgb(16, 14, 128); padding: 5px 0px 0px 5px; ; border-collapse: collapse; ">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 45%; height: 30px; text-align: left; border: 1px solid rgb(16, 14, 128) ">Prepare by: {{u.get_full_name}}
+                                    </th>
+                                    <th> </th>
+                                    <th style="width: 45%; height: 30px; text-align: left; border: 1px solid rgb(16, 14, 128) ">Payment Mode: {{rfs.pmode}}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {% if rfs.status == 'Approved'%}
+                                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">H.O.D Sign/Date: <img style="width: 100px; height: 30px;" src="{{a.signature.url}}" alt="image"> --- {{rfs.mdate}}
+                                    </th>
+                                    {% else %}
+                                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">H.O.D Sign/Date:
+                                    </th>
+                                    {% endif %}
+
+                                    <th>
+                                    </th>
+                                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) "> Beneficiary: {{rfs.beneficiary}}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    {% if rfs.fstatus == 'Approved' %}
+                                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">Finance Approval Sign/Date: <img style="width: 100px; height: 30px;" src="{{f.signature.url}}" alt="image"> --- {{rfs.fdate}}
+                                    </th>
+                                    {% else %}
+                                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">Finance Approval Sign/Date:
+                                    </th>
+                                    {% endif %}
+
+                                    <th>
+                                    </th>
+                                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) "> Beneficiary Acct info: {{rfs.bacctinfo}}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">Receiver Sign/Date:
+                                    </th>
+                                    <th>
+                                    </th>
+                                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) "> Others: {{rfs.others}}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: left; border: 1px solid rgb(16, 14, 128) ">Refund Details: {{rfs.rdetails}}
+                                    </th>
+                                    <th>
+                                    </th>
+                                    <th style="font-size: 8px; text-align: left; ">{Any requisition Fund not receiptable for may be deducted from wages if deemed receiptable}
+                                    </th>
+                                </tr>
+                            </tbody>
+
+
+                        </table>
+                        <br>
+                        <br>
+                        <br>
+                        <br> {% if request.user.is_superuser or request.user.is_Manager %}
+                        <div class="row">
+                            <div class="col col-lg-12 col-sm-12 text-center">
+                                {% if rfs.fstatus == 'Pending' %}
+                                <div class="btn-group btn-group-justified">
+                                    {% if rfs.rf_approved %}
+                                    <a href="{% url 'forms:unRFapprove' rfs.id %}" class="btn btn-primary" name='unapprove'>UNAPPROVE</a> {% else %}
+                                    <a href="{% url 'forms:RFapprove' rfs.id %}" class="btn btn-primary" name='approve'>APPROVE</a> {% endif %} {% if rfs.status == 'Rejected' %}
+                                    <a href="{% url 'forms:unRFreject' rfs.id %}" class="btn btn-warning" name='reject'>UNREJECT</a> {% else %}
+                                    <a href="{% url 'forms:RFreject' rfs.id %}" class="btn btn-warning" name='reject'>REJECT</a> {% endif %}
+                                </div>
+                                {% else %}
+                                <p>This request has received its final approval</p>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        {% elif request.user.is_superuser or request.user.is_FM %}
+                        <div class="row">
+                            <div class="col col-lg-12 col-sm-12 text-center">
+                                {% if rfs.status == 'Pending'%}
+                                <p>Can't approve, Kindly wait for the Manager's approval</p>
+                                {% else %}
+                                <div class="btn-group btn-group-justified">
+                                    {% if rfs.rf_fmapproved %}
+                                    <a href="{% url 'forms:unfRFapprove' rfs.id %}" class="btn btn-primary" name='unapprove'>UNAPPROVE</a> {% else %}
+                                    <a href="{% url 'forms:fRFapprove' rfs.id %}" class="btn btn-primary" name='approve'>APPROVE</a> {% endif %} {% if rfs.fstatus == 'Rejected' %}
+                                    <a href="{% url 'forms:unfRFreject' rfs.id %}" class="btn btn-warning" name='reject'>UNREJECT</a> {% else %}
+                                    <a href="{% url 'forms:fRFreject' rfs.id %}" class="btn btn-warning" name='reject'>REJECT</a> {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock changepassword %}

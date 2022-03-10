@@ -1,0 +1,70 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<div class="row">
+
+    {% include "stockside.html" %}
+    <div class="col-md-10 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <h1 class="card-title text-center">{{header}}</h1>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <form method='POST' action=''>{% csrf_token %} {{form|crispy}}
+                    <input class="btn btn-primary mybutton" type="submit" value='Search' />
+                </form>
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+                            <tr>
+                                <th>COUNT</th>
+                                <th>ACTION</th>
+                                <th>ACTION BY</th>
+                                <th>DATE</th>
+                            </tr>
+                        </thead>
+                        {% for instance in queryset reversed %}
+                        <tr>
+
+                            <td>{{forloop.revcounter}}</td>
+                            <td>{{instance.action}}</td>
+                            <td>{{instance.action_by}}</td>
+                            <td>{{instance.datefield}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <ul class="pagination" role="menubar" aria-label="Pagination">
+                    {% if queryset.has_previous %}
+                    <li><a href="?page=1"><span>First</span></a></li>
+                    <li><a href="?page={{queryset.previous_page_number}}"><span>Previous</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>First</span></a></li>
+                    <li><a href=""><span>Previous</span></a></li>
+                    {% endif %}
+                    <li class="current"><a href="">{{ queryset.number }}</a></li>
+                    {% if queryset.has_next %}
+                    <li><a href="?page={{ queryset.next_page_number }}"><span>Next</span></a></li>
+                    <li><a href="?page={{ queryset.paginator.num_pages }}"><span>Last</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>Next</span></a></li>
+                    <li><a href=""><span>Last</span></a></li>
+                    {% endif %}
+
+                </ul>
+                <div class="text-right">
+                    <p class="text-right">Page {{ queryset.number }} of {{ queryset.paginator.num_pages }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock changepassword %}

@@ -1,0 +1,30 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<div class="row">
+
+    {% include "stockside.html" %}
+    <div class="col-md-10 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <h1 class="card-title text-center">Location List</h1>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>The Location {{loc.name}} has been {{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="text-center"><a class="btn btn-primary" href="{% url 'stock:add_location' %}">Add Location</a></div>
+                <div class="row">
+
+                    {% for loc in loc %}
+                    <div style="margin: 10px 5px 10px 0;" class="col-2"><a class="btn btn-secondary" href="{% url 'stock:stocklist_loc' loc.id %}">{{forloop.counter}}. {{loc}}</a></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock changepassword %}

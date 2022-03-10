@@ -1,0 +1,79 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<div class="row">
+
+
+    {% include "payrollside.html" %}
+    <div class="col-md-10 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center">{{title}}</h1>
+                <p class="card-description text-center"></p>
+
+                <form method='POST' action=''>{% csrf_token %} {{form|crispy}}
+                    <input class="btn btn-primary mybutton" type="submit" value='Search' />
+                </form>
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+                            <tr>
+                                <th>Employee code</th>
+                                <th>Employee</th>
+                                <th>Month</th>
+                                <th>Year</th>
+                                <th>View</th>
+                                <th>Print</th>
+                                <th>Download</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pay in pay reversed %}
+                            <tr>
+                                <td>{{ pay.employ.employeeid }}</td>
+                                <td>{{ pay.employ }}</td>
+                                <td>{{ pay.month }}</td>
+                                <td>{{ pay.Year }}</td>
+                                <td>
+                                    <a class="badge badge-warning" href="{% url 'dashboard:viewPayrollONE' pay.id %}">View</a></td>
+                                <td>
+                                    <a class="badge badge-primary" href="{% url 'dashboard:PdfviewPayroll' pay.id %}">Print</a></td>
+                                <td>
+                                    <a class="badge badge-secondary" href="{% url 'dashboard:PdfdownloadPayroll' pay.id %}">Download</a></td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <ul class="pagination" role="menubar" aria-label="Pagination">
+                    {% if pay.has_previous %}
+                    <li><a href="?page=1"><span>First</span></a></li>
+                    <li><a href="?page={{pay.previous_page_number}}"><span>Previous</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>First</span></a></li>
+                    <li><a href=""><span>Previous</span></a></li>
+                    {% endif %}
+                    <li class="current"><a href="">{{ pay.number }}</a></li>
+                    {% if pay.has_next %}
+                    <li><a href="?page={{ pay.next_page_number }}"><span>Next</span></a></li>
+                    <li><a href="?page={{ pay.paginator.num_pages }}"><span>Last</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>Next</span></a></li>
+                    <li><a href=""><span>Last</span></a></li>
+                    {% endif %}
+
+                </ul>
+                <div class="text-right">
+                    <p class="text-right">Page {{ pay.number }} of {{ pay.paginator.num_pages }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock changepassword %}

@@ -1,0 +1,13 @@
+<div class="col-md-2 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <div class="text-center">
+                {% if request.user.is_superuser or request.user.is_HR %}
+                <a class="btn btn-info btn-lg btn-block" href="{% url 'dashboard:Payroll' %}">Create Payroll</a>
+                <a class="btn btn-info btn-lg btn-block" href="{% url 'dashboard:PayrollAll' %}">List All Payroll</a>{% endif %}
+                <a class="btn btn-info btn-lg btn-block" href="{% url 'dashboard:MyPayrollAll' %}">My Payroll</a>
+            </div>
+        </div>
+    </div>
+
+</div>

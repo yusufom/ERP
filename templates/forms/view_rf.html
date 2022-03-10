@@ -1,0 +1,236 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<form action="{% url 'forms:viewRF' %}" method="post">{% csrf_token %}
+    <div class="row">
+
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+
+                    <h1 class="card-title text-center">{{header}}</h1>
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-hover display expandable-table">
+                            <thead>
+                                <tr>{% if request.user.is_superuser or request.user.is_FM or request.user.is_Accountant %}
+                                    <th></th>
+                                    {% endif %}
+                                    <th>No</th>
+                                    <th>CCTR</th>
+                                    <th>Requesting Name</th>
+                                    <th>Approver</th>
+                                    <th>Final Approver</th>
+                                    <th>Date Created</th>
+                                    <th>Approval Status</th>
+                                    <th>Final Approval</th>
+                                    <th>Payment Status</th>
+                                    <th>Action</th>
+                                    <th>Print</th>
+                                    <th>Download</th>
+                                </tr>
+                            </thead>
+                            {% if request.user.is_Manager %} {% for instance in approvalist %}
+                            <tr>
+                                {% if request.user.is_superuser or request.user.is_FM or request.user.is_Accountant %}
+                                <td><input class="checkbox" type="checkbox" value="{{instance.id}}" name="rf_id" size="1" /></td>
+                                {% endif %}
+                                <td>{{forloop.revcounter}}</td>
+                                <td>{{instance.cctr}}</td>
+                                <td>{{instance.user.get_full_name}}</td>
+                                <td>{{instance.Manager_approval.get_full_name}}</td>
+                                <td>{{instance.Finance_approval.get_full_name}}</td>
+                                <td>{{instance.created}}</td>
+                                <td>{% if instance.status == 'Approved' %}
+                                    <div class="badge badge-success">{{instance.status}}</div>
+                                    {% elif instance.status == 'Pending' %}
+                                    <div class="badge badge-warning">{{instance.status}}</div>
+                                    {% elif instance.status == 'Rejected' %}
+                                    <div class="badge badge-danger">{{instance.status}}</div>{% endif %}
+                                </td>
+                                <td>{% if instance.fstatus == 'Approved' %}
+                                    <div class="badge badge-success">{{instance.fstatus}}</div>
+                                    {% elif instance.fstatus == 'Pending' %}
+                                    <div class="badge badge-warning">{{instance.fstatus}}</div>
+                                    {% elif instance.fstatus == 'Rejected' %}
+                                    <div class="badge badge-danger">{{instance.fstatus}}</div>{% endif %}
+                                </td>
+                                <td>{% if instance.get_status %}
+                                    <div class="badge badge-success">Paid</div>
+                                    {% else %}
+                                    <div class="badge badge-warning">Not Paid</div>{% endif %}
+                                </td>
+                                <td><a class="btn btn-secondary btn-sm" href="{% url 'forms:viewRFONE' instance.id %}">View</a></td>
+                                <td><a class="btn btn-primary btn-sm" href="{% url 'forms:pdfview' instance.id %}">Print</a></td>
+                                <td><a class="btn btn-dark btn-sm" href="{% url 'forms:pdfdownload' instance.id %}">Download</a></td>
+                            </tr>
+                            {% endfor %} {% elif request.user.is_FM %} {% for instance in Fapprovalist %}
+                            <tr>
+                                <td><input class="checkbox" type="checkbox" value="{{instance.id}}" name="rf_id" size="1" /></td>
+                                <td>{{forloop.revcounter}}</td>
+                                <td>{{instance.cctr}}</td>
+                                <td>{{instance.user.get_full_name}}</td>
+                                <td>{{instance.Manager_approval.get_full_name}}</td>
+                                <td>{{instance.Finance_approval.get_full_name}}</td>
+                                <td>{{instance.created}}</td>
+                                <td>{% if instance.status == 'Approved' %}
+                                    <div class="badge badge-success">{{instance.status}}</div>
+                                    {% elif instance.status == 'Pending' %}
+                                    <div class="badge badge-warning">{{instance.status}}</div>
+                                    {% elif instance.status == 'Rejected' %}
+                                    <div class="badge badge-danger">{{instance.status}}</div>{% endif %}
+                                </td>
+                                <td>{% if instance.fstatus == 'Approved' %}
+                                    <div class="badge badge-success">{{instance.fstatus}}</div>
+                                    {% elif instance.fstatus == 'Pending' %}
+                                    <div class="badge badge-warning">{{instance.fstatus}}</div>
+                                    {% elif instance.fstatus == 'Rejected' %}
+                                    <div class="badge badge-danger">{{instance.fstatus}}</div>{% endif %}
+                                </td>
+                                <td>{% if instance.get_status %}
+                                    <div class="badge badge-success">Paid</div>
+                                    {% else %}
+                                    <div class="badge badge-warning">Not Paid</div>{% endif %}
+                                </td>
+                                <td><a class="btn btn-secondary btn-sm" href="{% url 'forms:viewRFONE' instance.id %}">View</a></td>
+                                <td><a class="btn btn-primary btn-sm" href="{% url 'forms:pdfview' instance.id %}">Print</a></td>
+                                <td><a class="btn btn-dark btn-sm" href="{% url 'forms:pdfdownload' instance.id %}">Download</a></td>
+                            </tr>
+                            {% endfor %} {% else %} {% for instance in rflist %}
+                            <tr>
+                                {% if request.user.is_superuser or request.user.is_FM or request.user.is_Accountant %}
+                                <td><input class="checkbox" type="checkbox" value="{{instance.id}}" name="rf_id" size="1" /></td>
+                                {% endif %}
+                                <td>{{forloop.revcounter}}</td>
+                                <td>{{instance.cctr}}</td>
+                                <td>{{instance.user.get_full_name}}</td>
+                                <td>{{instance.Manager_approval.get_full_name}}</td>
+                                <td>{{instance.Finance_approval.get_full_name}}</td>
+                                <td>{{instance.created}}</td>
+                                <td>{% if instance.status == 'Approved' %}
+                                    <div class="badge badge-success">{{instance.status}}</div>
+                                    {% elif instance.status == 'Pending' %}
+                                    <div class="badge badge-warning">{{instance.status}}</div>
+                                    {% elif instance.status == 'Rejected' %}
+                                    <div class="badge badge-danger">{{instance.status}}</div>{% endif %}
+                                </td>
+                                <td>{% if instance.fstatus == 'Approved' %}
+                                    <div class="badge badge-success">{{instance.fstatus}}</div>
+                                    {% elif instance.fstatus == 'Pending' %}
+                                    <div class="badge badge-warning">{{instance.fstatus}}</div>
+                                    {% elif instance.fstatus == 'Rejected' %}
+                                    <div class="badge badge-danger">{{instance.fstatus}}</div>{% endif %}
+                                </td>
+                                <td>{% if instance.get_status %}
+                                    <div class="badge badge-success">Paid</div>
+                                    {% else %}
+                                    <div class="badge badge-warning">Not Paid</div>{% endif %}
+                                </td>
+                                <td><a class="btn btn-secondary btn-sm" href="{% url 'forms:viewRFONE' instance.id %}">View</a></td>
+                                <td><a class="btn btn-primary btn-sm" href="{% url 'forms:rfpdfview' instance.id %}">Print</a></td>
+                                <td><a class="btn btn-dark btn-sm" href="{% url 'forms:rfpdfdownload' instance.id %}">Download</a></td>
+                            </tr>
+                            {% endfor %} {% endif %}
+
+                        </table>
+                    </div>
+                </div>
+                {% if request.user.is_superuser or request.user.is_FM or request.user.is_Accountant %}
+                <hr>
+                <div class="card has-background-white-ter">
+                    <h4 class="card-header-title">
+                        Change Payment Status
+                    </h4>
+                    <div class="card-content">
+                        <div class="select is-rounded">
+                            <select class="form-control-sm" id="status" name="status">
+                            <option value="1">Paid</option>
+                            <option value="0">Not Paid</option>
+                        </select>
+                        </div>
+                        <br>
+                        <input class="button is-info is-rounded" type="submit" value="Change Status" name="mybtn">
+                    </div>
+                </div>
+                {% endif %}
+
+                <br>
+                <br> {% if request.user.is_Manager %}
+                <ul class="pagination" role="menubar" aria-label="Pagination">
+                    {% if approvalist.has_previous %}
+                    <li style="background-color: #4B49AC;"><a href="?page=1"><span>First</span></a></li>
+                    <li><a href="?page={{approvalist.previous_page_number}}"><span>Previous</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>First</span></a></li>
+                    <li><a href=""><span>Previous</span></a></li>
+                    {% endif %}
+                    <li class="current"><a href="">{{ approvalist.number }}</a></li>
+                    {% if approvalist.has_next %}
+                    <li><a href="?page={{ approvalist.next_page_number }}"><span>Next</span></a></li>
+                    <li><a href="?page={{ approvalist.paginator.num_pages }}"><span>Last</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>Next</span></a></li>
+                    <li><a href=""><span>Last</span></a></li>
+                    {% endif %}
+
+                </ul>
+                <div class="text-right">
+                    <p class="text-right">Page {{ approvalist.number }} of {{ approvalist.paginator.num_pages }}</p>
+                </div>
+                {% elif request.user.is_FM %}
+                <ul class="pagination" role="menubar" aria-label="Pagination">
+                    {% if Fapprovalist.has_previous %}
+                    <li style="background-color: #4B49AC;"><a href="?page=1"><span>First</span></a></li>
+                    <li><a href="?page={{Fapprovalist.previous_page_number}}"><span>Previous</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>First</span></a></li>
+                    <li><a href=""><span>Previous</span></a></li>
+                    {% endif %}
+                    <li class="current"><a href="">{{ Fapprovalist.number }}</a></li>
+                    {% if Fapprovalist.has_next %}
+                    <li><a href="?page={{ Fapprovalist.next_page_number }}"><span>Next</span></a></li>
+                    <li><a href="?page={{ Fapprovalist.paginator.num_pages }}"><span>Last</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>Next</span></a></li>
+                    <li><a href=""><span>Last</span></a></li>
+                    {% endif %}
+
+                </ul>
+                <div class="text-right">
+                    <p class="text-right">Page {{ Fapprovalist.number }} of {{ Fapprovalist.paginator.num_pages }}</p>
+                </div>
+                {% else %}
+                <ul class="pagination" role="menubar" aria-label="Pagination">
+                    {% if rflist.has_previous %}
+                    <li style="background-color: #4B49AC;"><a href="?page=1"><span>First</span></a></li>
+                    <li><a href="?page={{rflist.previous_page_number}}"><span>Previous</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>First</span></a></li>
+                    <li><a href=""><span>Previous</span></a></li>
+                    {% endif %}
+                    <li class="current"><a href="">{{ rflist.number }}</a></li>
+                    {% if rflist.has_next %}
+                    <li><a href="?page={{ rflist.next_page_number }}"><span>Next</span></a></li>
+                    <li><a href="?page={{ rflist.paginator.num_pages }}"><span>Last</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>Next</span></a></li>
+                    <li><a href=""><span>Last</span></a></li>
+                    {% endif %}
+
+                </ul>
+                <div class="text-right">
+                    <p class="text-right">Page {{ rflist.number }} of {{ rflist.paginator.num_pages }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock changepassword %}

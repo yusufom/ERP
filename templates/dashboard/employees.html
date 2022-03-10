@@ -1,0 +1,156 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<div class="row">
+    <div class="col-md-6 col-6 mb-4 stretch-card transparent">
+        <div class="card card-tale">
+            <div class="card-body">
+                <p class="fs-30 mb-4">Employees</p>
+                <p class="mb-2">Count: {{ all_employees.count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-6 mb-4 stretch-card transparent">
+        <div class="card card-dark-blue">
+            <div class="card-body">
+                <p class="fs-30 mb-4">Departments</p>
+                <p class="mb-2">Count: {{ departments.count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4 stretch-card transparent">
+        <div class="card card-tale">
+            <div class="card-body">
+                <p class="fs-30 mb-4">Requisition Forms</p>
+                <p class="mb-2">Count: {{rf.count}}</p>
+                <p>Pending Approval: {{rfp.count}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4 stretch-card transparent">
+        <div class="card card-dark-blue">
+            <div class="card-body">
+                <p class="fs-30 mb-4">Leaves</p>
+                <p class="mb-2">Count: {{l.count}}</p>
+                <p>Pending Approval: {{allpend.count}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4 stretch-card transparent">
+        <div class="card card-light-blue">
+            <div class="card-body">
+                <p class="fs-30 mb-4">Birthdays</p>
+                <p class="mb-2">This Month: {{employees_birthday.count}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="row">
+    <section class="col col-sm-8 offset-sm-2">
+
+        {% if messages %} {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags}}" {% endif %}>
+            {{ message }}
+            <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        {% endfor %} {% endif %}
+
+    </section>
+</section>
+<div class="text-center template-demo">
+    <a class='btn btn-info' , href="{% url 'dashboard:FamilyAdd' %}">+Family Information</a>
+    <a class='btn btn-primary' , href="{% url 'dashboard:EmergencyCreate' %}">+Emergency Information</a>
+    <a type="button" class='btn btn-dark' , href="{% url 'dashboard:BankinfoAdd' %}">+Bank Information</a>
+    <a type="button" class='btn btn-secondary' , href="{% url 'dashboard:DeptAdd' %}">+Department</a>
+</div>
+<br>
+<div>
+
+    <div class="nav-search d-none d-lg-block">
+        <form action="" method="GET">
+            <div class="input-group">
+                <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
+                    <button class="input-group-text" id="search"><i class="icon-search"></i></button>
+                </div>
+                <input type="search" name="search" value="{{request.GET.search}}" class="form-control" id="navbar-search-input" placeholder="Search by First name or Last name or both..." aria-label="search" aria-describedby="search">
+            </div>
+        </form>
+
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title text-center">List Of Employees</h1>
+        <div class="table-responsive">
+            <table class="table table-hover display expandable-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Fullname</th>
+                        <th>Role</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employee_list %}
+                    <tr>
+
+                        {% if employee.employeeid %}
+                        <td>{{ employee.employeeid }}</td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+
+                        <th scope="row">{{ employee.get_full_name }}</th>
+                        <td>{{ employee.role }}</td>
+                        <td>{{ employee.department }}</td>
+
+                        {% if employee.is_blocked %}
+                        <td>Inactive</td>
+                        {% else %}
+                        <td>Active</td>
+                        {% endif %}
+
+                        <td><a class="badge badge-info" href="{% url 'dashboard:Employeeinfo' employee.id %}">View</a>
+                            <a class="badge badge-success" href="{% url 'dashboard:Edit' employee.id %}">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+            <ul class="pagination" role="menubar" aria-label="Pagination">
+                {% if employee_list.has_previous %}
+                <li style="background-color: #4B49AC;"><a href="?page=1"><span>First</span></a></li>
+                <li><a href="?page={{employee_list.previous_page_number}}"><span>Previous</span></a></li>
+                {% else %}
+                <li><a href=""><span>First</span></a></li>
+                <li><a href=""><span>Previous</span></a></li>
+                {% endif %}
+                <li class="current"><a href="">{{ employee_list.number }}</a></li>
+                {% if employee_list.has_next %}
+                <li><a href="?page={{ employee_list.next_page_number }}"><span>Next</span></a></li>
+                <li><a href="?page={{ employee_list.paginator.num_pages }}"><span>Last</span></a></li>
+                {% else %}
+                <li><a href=""><span>Next</span></a></li>
+                <li><a href=""><span>Last</span></a></li>
+                {% endif %}
+
+            </ul>
+            <div class="text-right">
+                <p class="text-right">Page {{ employee_list.number }} of {{ employee_list.paginator.num_pages }}</p>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+</script>
+{% endblock changepassword %}

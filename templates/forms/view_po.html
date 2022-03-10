@@ -1,0 +1,133 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %}{% load crispy_forms_tags %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<div class="row">
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <h1 class="card-title text-center">{{header}}</h1>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <br> {% if request.user.is_Procurement %}
+                <form method='POST' action=''>{% csrf_token %} {{form|crispy}}
+                    <input class="btn btn-primary mybutton" type="submit" value='Search' />
+                </form>
+                <br> {% endif %}
+
+                <div class="table-responsive">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Order No</th>
+                                <th>Created By</th>
+                                <th>Approver</th>
+                                <th>Date Created</th>
+                                <th>Approval Status</th>
+                                <th>Action</th>
+                                <th>Print</th>
+                                <th>Download</th>
+                            </tr>
+                        </thead>
+                        {% if request.user.is_Manager or request.user.is_FM %} {% for instance in approvalist %}
+                        <tr>
+                            <td>{{forloop.revcounter}}</td>
+                            <td>{{instance.order_no}}</td>
+                            <td>{{instance.user.get_full_name}}</td>
+                            <td>{{instance.approval.get_full_name}}</td>
+                            <td>{{instance.created}}</td>
+                            <td>{% if instance.status == 'Approved' %}
+                                <div class="badge badge-success">{{instance.status}}</div>
+                                {% elif instance.status == 'Pending' %}
+                                <div class="badge badge-warning">{{instance.status}}</div>
+                                {% elif instance.status == 'Rejected' %}
+                                <div class="badge badge-danger">{{instance.status}}</div>{% endif %}
+                            </td>
+                            <td><a class="btn btn-secondary btn-sm" href="{% url 'forms:viewPONE' instance.id %}">View</a></td>
+                            <td><a class="btn btn-primary btn-sm" href="{% url 'forms:pdfview' instance.id %}">Print</a></td>
+                            <td><a class="btn btn-dark btn-sm" href="{% url 'forms:pdfdownload' instance.id %}">Download</a></td>
+                        </tr>
+                        {% endfor %} {% else %} {% for instance in polist %}
+                        <tr>
+                            <td>{{forloop.revcounter}}</td>
+                            <td>{{instance.order_no}}</td>
+                            <td>{{instance.user.get_full_name}}</td>
+                            <td>{{instance.approval.get_full_name}}</td>
+                            <td>{{instance.created}}</td>
+                            <td>{% if instance.status == 'Approved' %}
+                                <div class="badge badge-success">{{instance.status}}</div>
+                                {% elif instance.status == 'Pending'%}
+                                <div class="badge badge-warning">{{instance.status}}</div>
+                                {% elif instance.condition == 'Rejected'%}
+                                <div class="badge badge-danger">{{instance.status}}</div>
+                                {% else %}{{instance.status}}{% endif %}
+                            </td>
+                            <td><a class="btn btn-secondary btn-sm" href="{% url 'forms:viewPONE' instance.id %}">View</a></td>
+                            <td><a class="btn btn-primary btn-sm" href="{% url 'forms:pdfview' instance.id %}">Print</a></td>
+                            <td><a class="btn btn-dark btn-sm" href="{% url 'forms:pdfdownload' instance.id %}">Download</a></td>
+                        </tr>
+                        {% endfor %} {% endif %}
+
+                    </table>
+                </div>
+                <br>
+                <br> {% if request.user.is_Manager or request.user.is_FM %}
+                <ul class="pagination" role="menubar" aria-label="Pagination">
+                    {% if approvalist.has_previous %}
+                    <li style="background-color: #4B49AC;"><a href="?page=1"><span>First</span></a></li>
+                    <li><a href="?page={{approvalist.previous_page_number}}"><span>Previous</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>First</span></a></li>
+                    <li><a href=""><span>Previous</span></a></li>
+                    {% endif %}
+                    <li class="current"><a href="">{{ approvalist.number }}</a></li>
+                    {% if approvalist.has_next %}
+                    <li><a href="?page={{ approvalist.next_page_number }}"><span>Next</span></a></li>
+                    <li><a href="?page={{ approvalist.paginator.num_pages }}"><span>Last</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>Next</span></a></li>
+                    <li><a href=""><span>Last</span></a></li>
+                    {% endif %}
+
+                </ul>
+                <div class="text-right">
+                    <p class="text-right">Page {{ approvalist.number }} of {{ approvalist.paginator.num_pages }}</p>
+                </div>
+                {% else %}
+                <ul class="pagination" role="menubar" aria-label="Pagination">
+                    {% if polist.has_previous %}
+                    <li style="background-color: #4B49AC;"><a href="?page=1"><span>First</span></a></li>
+                    <li><a href="?page={{polist.previous_page_number}}"><span>Previous</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>First</span></a></li>
+                    <li><a href=""><span>Previous</span></a></li>
+                    {% endif %}
+                    <li class="current"><a href="">{{ polist.number }}</a></li>
+                    {% if polist.has_next %}
+                    <li><a href="?page={{ polist.next_page_number }}"><span>Next</span></a></li>
+                    <li><a href="?page={{ polist.paginator.num_pages }}"><span>Last</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>Next</span></a></li>
+                    <li><a href=""><span>Last</span></a></li>
+                    {% endif %}
+
+                </ul>
+                <div class="text-right">
+                    <p class="text-right">Page {{ polist.number }} of {{ polist.paginator.num_pages }}</p>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock changepassword %}

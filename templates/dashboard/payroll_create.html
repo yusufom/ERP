@@ -1,0 +1,35 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<div class="row">
+
+
+    {% include "payrollside.html" %}
+    <div class="col-md-10 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center">{{title}}</h1>
+                <p class="card-description text-center">{{subtitle}}</p>
+                <p class="card-description text-center">All Fields with Asterisk are required</p>
+
+                {% if messages %} {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags}}" {% endif %}>
+                    <p class="card-description">{{ message }}</p>
+                    <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %} {% endif %}
+                <form class="forms-sample" action="" method="POST">
+                    <div class="form-group">
+                        {% csrf_token %} {{form | crispy }}
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-light">Cancel</a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock changepassword %}

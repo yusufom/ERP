@@ -1,0 +1,104 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard:Dash' %}">
+                <i class="icon-grid menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'accounts:Userprofile' %}">
+                <i class="icon-folder menu-icon"></i>
+                <span class="menu-title">Profile</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        {% if request.user.is_superuser or request.user.is_HR or request.user.is_staff %}
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#employees" aria-expanded="false" aria-controls="employees">
+                <i class="icon-head menu-icon"></i>
+                <span class="menu-title">Employees</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="employees">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'dashboard:Employees' %}">View Employees</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'dashboard:Employeecreate' %}">Add Employees</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'accounts:Register' %}">Create User</a></li>
+            </div>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#rf" aria-expanded="false" aria-controls="rf">
+                <i class="icon-columns menu-icon"></i>
+                <span class="menu-title">Requisition Form</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="rf">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'forms:createRF' %}">Create RF</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'forms:viewRF' %}">View RF</a></li>
+            </div>
+        </li>
+        <!-- <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard:Payroll' %}">
+                <i class="icon-content-right menu-icon"></i>
+                <span class="menu-title">Payroll</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li> -->
+        {% if request.user.is_superuser or request.user.is_FM or request.user.is_Procurement or request.user.is_staff or request.user.is_Manager %}
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#po" aria-expanded="false" aria-controls="po">
+                <i class="icon-grid-2 menu-icon"></i>
+                <span class="menu-title">Purchase Order</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="po">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'forms:createPO' %}">Create PO</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'forms:viewPO' %}">View PO</a></li>
+            </div>
+        </li>
+        {% endif %} {% if request.user.is_superuser or request.user.is_FM or request.user.is_Warehouse or request.user.is_Procurement or request.user.is_staff %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'stock:list_item' %}">
+                <i class="icon-contract menu-icon"></i>
+                <span class="menu-title">Inventory</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        {% endif %}
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard:CreateLeave' %}">
+                <i class="icon-mail menu-icon"></i>
+                <span class="menu-title">Leave</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard:birthdays' %}">
+                <i class="icon-bag menu-icon"></i>
+                <span class="menu-title">Birthdays ({{employees_birthday.count}})</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        {% if request.user.is_superuser or request.user.is_Engineer or request.user.is_staff %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'process:ProceesHome' %}">
+                <i class="icon-arrow-right menu-icon"></i>
+                <span class="menu-title">Process</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard:TodoList' %}">
+                <i class="icon-monitor menu-icon"></i>
+                <span class="menu-title">To-Do</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        </ul>
+</nav>

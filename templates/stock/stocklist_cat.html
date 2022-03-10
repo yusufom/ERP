@@ -1,0 +1,64 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<div class="row">
+
+    {% include "stockside.html" %}
+    <div class="col-md-10 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <h1 class="card-title text-center">{{title}}</h1>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <form method='POST' action=''>{% csrf_token %} {{form|crispy}}
+                    <input class="btn btn-primary mybutton text-center" type="submit" value='Search' />
+                </form>
+                <br>
+                <h2 class='text-center'>{{cat.name}}</h2>
+                <div class="table-responsive">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+                            <tr>
+                                <th>COUNT</th>
+                                <th>ITEM NAME</th>
+                                <th>QUANTITY IN STORE</th>
+                                <th>TIMESTAMP</th>
+                                <th>LAST UPDATED</th>
+                                <th>CONDITION</th>
+                                <th>DELETE ITEM</th>
+                            </tr>
+                        </thead>
+                        {% for stk in stk %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td><a href="{% url 'stock:stock_detail' stk.id %}">{{stk.item_name}}</a></td>
+                            <td>
+                                {% if stk.quantity <= stk.reorder_level %} <div class="badge badge-warning">{{stk.quantity}} {{stk.unit}}</div>
+                {% else %} {{stk.quantity}} {% endif %}
+                </td>
+                <td>{{stk.datefield}}</td>
+                <td>{{stk.last_updated}}</td>
+                <td>{% if stk.condition == 'Good' %}
+                                <div class="badge badge-success">{{stk.condition}}</div>
+                                {% elif stk.condition == 'Okay'%}
+                                <div class="badge badge-warning">{{stk.condition}}</div>
+                                {% elif stk.condition == 'Bad'%}
+                                <div class="badge badge-danger">{{stk.condition}}</div>
+                                {% else %}{{stk.condition}}{% endif %}
+                            </td>
+                <td><a href="{% url 'stock:delete_items' stk.id %}">Delete</a></td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+{% endblock changepassword %}

@@ -1,0 +1,88 @@
+{% extends "dashboard/dashboard.html" %} {% load static %} {% block changepassword %} {% load crispy_forms_tags %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<div class="row">
+
+    {% include "stockside.html" %}
+    <div class="col-md-10 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center">Item List</h1>
+                <p class="card-description text-center"></p>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <form method='POST' action=''>{% csrf_token %} {{form|crispy}}
+                    <input class="btn btn-primary mybutton" type="submit" value='Search' />
+                </form>
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-hover display expandable-table">
+                        <thead>
+                            <tr>
+                                <th>COUNT</th>
+                                <th>CATEGORY</th>
+                                <th>ITEM NAME</th>
+                                <th>QUANTITY IN STORE</th>
+                                <th>UNIT</th>
+                                <th>TIMESTAMP</th>
+                                <th>LAST UPDATED</th>
+                                <th>CONDITION</th>
+                                <th>DELETE ITEM</th>
+                            </tr>
+                        </thead>
+                        {% for instance in queryset reversed %}
+                        <tr>
+                            <td>{{forloop.revcounter}}</td>
+                            <td>{{instance.category}}</td>
+                            <td><a href="{% url 'stock:stock_detail' instance.id %}">{{instance.item_name}}</a></td>
+                            <td>
+                                {% if instance.quantity <= instance.reorder_level %} <div class="badge badge-warning">{{instance.quantity}} {% else %} {{instance.quantity}}{% endif %}
+                            </td>
+                            <td>{{instance.unit}}</td>
+                            <td>{{instance.datefield}}</td>
+                            <td>{{instance.last_updated}}</td>
+                            <td>{% if instance.condition == 'Good' %}
+                                <div class="badge badge-success">{{instance.condition}}</div>
+                                {% elif instance.condition == 'Okay'%}
+                                <div class="badge badge-warning">{{instance.condition}}</div>
+                                {% elif instance.condition == 'Bad'%}
+                                <div class="badge badge-danger">{{instance.condition}}</div>
+                                {% else %}{{instance.condition}}{% endif %}
+                            </td>
+                            <td><a style="color: red;" href="{% url 'stock:delete_items' instance.id %}">Delete</a></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <ul class="pagination" role="menubar" aria-label="Pagination">
+                    {% if queryset.has_previous %}
+                    <li><a href="?page=1"><span>First</span></a></li>
+                    <li><a href="?page={{queryset.previous_page_number}}"><span>Previous</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>First</span></a></li>
+                    <li><a href=""><span>Previous</span></a></li>
+                    {% endif %}
+                    <li class="current"><a href="">{{ queryset.number }}</a></li>
+                    {% if queryset.has_next %}
+                    <li><a href="?page={{ queryset.next_page_number }}"><span>Next</span></a></li>
+                    <li><a href="?page={{ queryset.paginator.num_pages }}"><span>Last</span></a></li>
+                    {% else %}
+                    <li><a href=""><span>Next</span></a></li>
+                    <li><a href=""><span>Last</span></a></li>
+                    {% endif %}
+
+                </ul>
+                <div class="text-right">
+                    <p class="text-right">Page {{ queryset.number }} of {{ queryset.paginator.num_pages }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+    {% endblock changepassword %}

@@ -1,0 +1,248 @@
+<!Doctype html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <title>Purchase Order</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+
+
+</head>
+<style>
+    @media print {
+        h1 {
+            font-size: 16pt;
+            padding-bottom: -25px;
+            padding-top: -10px;
+        }
+        section {
+            -pdf-frame-border: 1;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-right {
+            text-align: right !important;
+        }
+        @page {
+            size: a4 portrait;
+            @frame header_frame {
+                /* Static Frame */
+                left: 30pt;
+                width: 500pt;
+                top: 70pt;
+                height: 80pt;
+            }
+            @frame content_frame {
+                /* Content Frame */
+                left: 20pt;
+                width: 530pt;
+                top: 180pt;
+                height: 632pt;
+            }
+            @frame footer_frame {
+                /* Another static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt;
+                width: 512pt;
+                top: 772pt;
+                height: 20pt;
+            }
+        }
+    }
+</style>
+
+<body>
+
+    <div id="header_content">
+        <table>
+            <tr>
+                <td><img style="width: 180px; height:auto;" src="https://cozymltd-bucket.s3.amazonaws.com/staticfiles/images/cozym_ltd.png" alt=""></td>
+                <td style="font-size: 15px;">
+                    <p><br><b style="color:#313D6D;">Corporate Head Office:</b> <br> 3B Abike Animashaun Street, <br>Off Durosimi Etti Street, <br> Lekki Phase 1, Lagos</p>
+                </td>
+                <td style="font-size: 15px;">
+                    <p><br><b style="color:#313D6D;">Office:</b> 09070000251, 09070000252 <br> <b style="color:#313D6D;">Email:</b> info@cozymltd.com <br><b style="color:#313D6D;">Web:</b> www.cozymltd.com</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="footer_content">
+        <p class="text-right">Page
+            <pdf:pagenumber>
+                of
+                <pdf:pagecount>
+        </p>
+    </div>
+
+
+
+    <h1 class="text-center">PAYSLIP: {{payr.month }} {{payr.Year}}</h1>
+    <hr>
+
+
+
+    <table>
+        <thead>
+            <th style="width:30%; border: none; font-size: 10pt;  height: 35px;">NAME: {{payr.employ}}</th>
+            <th style="width:40%; border: none; font-size: 10pt;  height: 35px;">DESIGNATION: {{payr.employ.role}}</th>
+            <th style="width:30%; border: none; font-size: 10pt;  height: 35px;">PAYMENT DATE: {{payr.paymentdate}}</th>
+        </thead>
+    </table>
+    <br>
+    <table>
+        <thead>
+            <th style="width:30%; border: none; font-size: 10pt; height: 35px;">DEPARTMENT: {{payr.employ.department}}</th>
+            <th style="width:70%; border: none; font-size: 10pt; height: 35px;">DATE OF ENGAGEMENT: {{payr.employ.startdate}}</th>
+        </thead>
+    </table>
+    <br>
+    <table>
+        <thead>
+            <th style="width:30%; border: none; font-size: 10pt;  height: 35px;">ACCOUNT NO: {{bank.account}}</th>
+            <th style="width:70%; border: none; font-size: 10pt;  height: 35px;">EMPLOYEE ADDRESS: {{payr.employ.address}}</th>
+        </thead>
+    </table>
+    <br>
+
+    </div>
+    <div style="font-size: 10pt;" class="row text-left">
+        <p><b></b></p>
+        <p><b></b></p>
+    </div>
+
+    <div style="font-size: 12px;">
+        <table>
+            <thead>
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <td style="width:20%; border: none; text-align: center; font-size: 15pt;"><b>Earnings</b></td>
+                    <td style="width:20%; border: none;"></td>
+                </tr>
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; border-left: 1px solid black; border-top: 1px solid black; border-collapse: collapse; text-align: center; height: 35px; padding-top: 5px; background-color: #4B49AC; color: white;"><b>Basic</b></th>
+                    <td style="width:20%; border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ basicd }}</td>
+                    <td style="width:20%; border-right: 1px solid black; border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="border-left: 1px solid black;  border-collapse: collapse; text-align: center; height: 35px; padding-top: 5px; background-color: #4B49AC; color: white;">Housing</th>
+                    <td style="border: none; border-collapse: collapse; text-align: center; padding-top: 5px;">{{housingd}}</td>
+                    <td style="width:20%; border-right: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                </tr>
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; border-left: 1px solid black; border-collapse: collapse; text-align: center; height: 35px; padding-top: 5px; background-color: #4B49AC; color: white;"><b>Transport</b></th>
+                    <td style="width:20%; border: none; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ transportd}}</td>
+                    <td style="width:20%; border-right: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                </tr>
+                {% if payr.overtime == '0' %} {% else %}
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; border-left: 1px solid black; border-collapse: collapse; text-align: center; height: 35px; padding-top: 5px; background-color: #4B49AC; color: white;"><b>Overtime</b></th>
+                    <td style="width:20%; border: none; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ overtimed }}</td>
+                    <td style="width:20%; border-right: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                </tr>
+                {% endif %} {% if payr.bonus == '0' %}
+                <tr></tr>
+                {% else %}
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; border-left: 1px solid black; border-collapse: collapse; text-align: center; height: 35px; padding-top: 5px; background-color: #4B49AC; color: white;"><b>Bonus</b></th>
+                    <td style="width:20%; border: none; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ bonused }}</td>
+                    <td style="width:20%; border-right: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; color:red; border-left: 1px solid black; border-bottom: 1px solid black; border-collapse: collapse; text-align: center; height: 35px; padding-top: 5px; background-color: #4B49AC;"><b>Gross PAY</b></th>
+                    <td style="width:20%; border-bottom: 1px solid black;"></td>
+                    <td style="width:20%; color:red; border-right: 1px solid black; border-bottom: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ grossd }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <br>
+    </div>
+    <div style="font-size: 12px;">
+        <table>
+            <thead>
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; border: none; font-size: 15pt;"><b>Deductions</b></th>
+                    <td style="width:20%; border: none;"></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="border-left: 1px solid black; border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; height: 35px; background-color: #4B49AC; color: white;">Paye</th>
+                    <td style="border-top: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{payrd}}</td>
+                    <td style="width:20%; border-right: 1px solid black; border-top: 1px solid black;border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                </tr>
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; border-left: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; height: 35px; background-color: #4B49AC; color: white;"><b>Pension</b></th>
+                    <td style="width:20%; border:none; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ pensiond }}</td>
+                    <td style="width:20%; border-right: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                </tr>
+                {% if payr.loan == '0' %} {% else %}
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; border-left: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; height: 35px; background-color: #4B49AC; color: white;"><b>Loan</b></th>
+                    <td style="width:20%; border: none; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ loaned }}</td>
+                    <td style="width:20%; border-right: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                </tr>
+                {% endif %} {% if payr.otherd == '0' %} {% else %}
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; border-left: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; height: 35px; background-color: #4B49AC; color: white;"><b>Other Deductions</b></th>
+                    <td style="width:20%; border: none; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ otherdd }}</td>
+                    <td style="width:20%; border-right: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; border-left: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px; height: 35px; background-color: #4B49AC; color: white;"><b>Total</b></th>
+                    <td style="width:20%; border-bottom: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;"></td>
+                    <td style="width:20%; border-right: 1px solid black; border-bottom: 1px solid black; border-collapse: collapse; text-align: center; padding-top: 5px;">{{ total }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <br>
+    <div style="font-size: 12px;">
+        <table>
+            <thead>
+                <tr>
+                    <td style="width:20%; border: none;"></td>
+                    <th style="width:20%; color:green; border-top: 1px solid black; border-bottom: 1px solid black; border-left: 1px solid black; border-collapse: collapse; text-align: center; height: 50px; padding-top: 5px; background-color: #4B49AC; "><b>Net Pay</b></th>
+                    <td style="width:20%; border-top: 1px solid black; border-bottom: 1px solid black;"></td>
+                    <td style="width:20%; color:green; border-right: 1px solid black; border-top: 1px solid black; border-bottom: 1px solid black;border-collapse: collapse; text-align: center; padding-top: 5px;">{{net}}</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
+</html>
